@@ -172,10 +172,18 @@ fn dry_run_reports_points_per_operator() {
     // Only calc.go discovered (test files skipped).
     assert_eq!(d.files.len(), 1, "only calc.go should be discovered");
     assert_eq!(d.files[0].file, "calc.go");
-    // Point shape sanity: 1-based positions.
+    // Point shape sanity: 1-based positions, known operator names.
+    let valid_ops = [
+        "AOR", "ROR", "LOR", "COR", "SDL", "RVR", "INC", "LBR", "ILI",
+    ];
     for f in &d.files {
         for p in &f.points {
             assert!(p.line >= 1 && p.column >= 1);
+            assert!(
+                valid_ops.contains(&p.operator.as_str()),
+                "unknown operator {}",
+                p.operator
+            );
         }
     }
 }
@@ -228,10 +236,22 @@ fn classification_is_consistent_and_kills_everything() {
         r.mutation_score
     );
     assert!(!r.below_threshold);
-    // Every classification has a stable file identity.
+    // Every classification has a stable file identity and a valid outcome.
+    let valid_outcomes = [
+        "killed",
+        "survived",
+        "not_covered",
+        "compile_error",
+        "timeout",
+    ];
     for c in &r.classifications {
         assert!(c.file.ends_with(".go"));
         assert!(c.line >= 1);
+        assert!(
+            valid_outcomes.contains(&c.outcome.as_str()),
+            "unknown outcome {}",
+            c.outcome
+        );
     }
 }
 
