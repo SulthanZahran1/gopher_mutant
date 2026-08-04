@@ -173,6 +173,7 @@ fn dry_run_reports_points_per_operator() {
     assert_eq!(d.files.len(), 1, "only calc.go should be discovered");
     assert_eq!(d.files[0].file, "calc.go");
     // Point shape sanity: 1-based positions, known operator names.
+    // JSON serializes operators in snake_case (aor) — compare case-insensitively.
     let valid_ops = [
         "AOR", "ROR", "LOR", "COR", "SDL", "RVR", "INC", "LBR", "ILI",
     ];
@@ -180,7 +181,9 @@ fn dry_run_reports_points_per_operator() {
         for p in &f.points {
             assert!(p.line >= 1 && p.column >= 1);
             assert!(
-                valid_ops.contains(&p.operator.as_str()),
+                valid_ops
+                    .iter()
+                    .any(|op| op.eq_ignore_ascii_case(&p.operator)),
                 "unknown operator {}",
                 p.operator
             );
