@@ -1,0 +1,18 @@
+[package]
+name = "gopher-mutant-core"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Core library: parsing, mutation operators, patching, runner, classification"
+
+[lib]
+name = "gopher_mutant_core"
+path = "src/lib.rs"
+
+[dependencies]
+tree-sitter = "0.26"
+tree-sitter-go = "0.25"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+anyhow = "1"
+libc = "0.2"
