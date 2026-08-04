@@ -83,6 +83,13 @@ fn run(cli: &Cli) -> Result<i32> {
         return Ok(2);
     }
 
+    // Canonicalize so overlay JSON paths are absolute — `go test` resolves
+    // overlay entries against its cwd, and relative entries silently no-op
+    // (every mutant would survive).
+    let module_root = std::fs::canonicalize(&cli.path)
+        .with_context(|| format!("failed to canonicalize {}", cli.path.display()))?;
+    let cli_path_display = cli.path.display().to_string();
+
     let operators: Vec<Operator> = match &cli.operators {
         Some(s) => {
             let mut ops = Vec::new();
@@ -105,8 +112,8 @@ fn run(cli: &Cli) -> Result<i32> {
         None => ALL_OPERATORS.to_vec(),
     };
 
-    let discovery = discover(&cli.path, &operators)
-        .with_context(|| format!("discovery failed on {}", cli.path.display()))?;
+    let discovery = discover(&module_root, &operators)
+        .with_context(|| format!("discovery failed on {cli_path_display}"))?;
 
     if discovery.total == 0 {
         eprintln!("error: no mutants found (no mutation points in module)");
@@ -133,7 +140,7 @@ fn run(cli: &Cli) -> Result<i32> {
     let coverprofile =
         std::env::temp_dir().join(format!("gopher-mutant-{}-cover.out", std::process::id()));
     let (baseline_ok, _) =
-        baseline_coverage(&cli.path, &coverprofile).context("failed to run baseline go test")?;
+        baseline_coverage(&module_root, &coverprofile).context("failed to run baseline go test")?;
     let coverage = if coverprofile.exists() {
         std::fs::read_to_string(&coverprofile).unwrap_or_default()
     } else {
@@ -145,7 +152,7 @@ fn run(cli: &Cli) -> Result<i32> {
         eprintln!("error: baseline `go test` failed — the module does not pass its own tests");
         return Ok(2);
     }
-    let covered = gopher_mutant_core::runner::covered_lines(&coverage);
+    let covered = gopher_mutant_core::runner::covered_blocks(&coverage);
 
     // Overlay scratch dir.
     let overlay_dir =
@@ -159,12 +166,12 @@ fn run(cli: &Cli) -> Result<i32> {
     let mut classifications = Vec::with_capacity(discovery.total);
 
     for (idx, fd) in discovery.files.iter().enumerate() {
-        let abs = cli.path.join(&fd.file);
+        let abs = module_root.join(&fd.file);
         let source = std::fs::read_to_string(&abs)
             .with_context(|| format!("failed to read {}", abs.display()))?;
         for mp in &fd.points {
             classifications.push(run_one(
-                &cli.path,
+                &module_root,
                 &source,
                 mp,
                 &overlay_dir,
@@ -186,7 +193,7 @@ fn run(cli: &Cli) -> Result<i32> {
             schema_version: 1,
             tool: "gopher_mutant".into(),
             go_toolchain: go_version(),
-            module_path: cli.path.to_string_lossy().to_string(),
+            module_path: module_root.to_string_lossy().to_string(),
             report: &report,
         };
         println!("{}", serde_json::to_string_pretty(&out)?);
@@ -204,7 +211,7 @@ fn run_one(
     mp: &MutationPoint,
     overlay_dir: &Path,
     timeout: std::time::Duration,
-    covered: &std::collections::HashSet<(String, usize)>,
+    covered: &[gopher_mutant_core::runner::CoverageBlock],
     idx: usize,
 ) -> Result<Classification> {
     let run = run_mutant(module_root, mp, source, overlay_dir, timeout)?;
@@ -213,13 +220,14 @@ fn run_one(
         gopher_mutant_core::runner::RunKind::CompileError => Outcome::CompileError,
         gopher_mutant_core::runner::RunKind::Failed => Outcome::Killed,
         gopher_mutant_core::runner::RunKind::Passed => {
-            if covered.contains(&(mp.file.clone(), mp.line)) {
+            if gopher_mutant_core::runner::covered_by(covered, &mp.file, mp.line) {
                 Outcome::Survived
             } else {
                 Outcome::NotCovered
             }
         }
     };
+    let covered_flag = gopher_mutant_core::runner::covered_by(covered, &mp.file, mp.line);
     Ok(Classification {
         id: idx,
         file: mp.file.clone(),
@@ -229,7 +237,7 @@ fn run_one(
         label: mp.label.clone(),
         outcome,
         duration_ms: run.duration.as_millis(),
-        covered: covered.contains(&(mp.file.clone(), mp.line)),
+        covered: covered_flag,
     })
 }
 

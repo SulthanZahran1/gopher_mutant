@@ -7,58 +7,60 @@
 use serde::Serialize;
 use std::fmt;
 
-/// The 10 generic operator classes, shared with dart_mutant's generic set.
+/// The 10 generic operator classes, per GOAL-1 criterion 2 (locked):
+/// arithmetic swap, relational boundary, relational negation, logical swap,
+/// boolean term removal, increment/decrement, statement removal, return value
+/// removal, loop boundary, integer literal inc/dec. ROR emits both the
+/// boundary (<=↔<) and negation (==↔!=) flavors; LBR and ILI are distinct.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub enum Operator {
     /// Arithmetic operator replacement: `+`↔`-`, `*`↔`/`, `%`→`*`.
     Aor,
-    /// Arithmetic operator deletion: drop the operator (leave one operand).
-    Aod,
-    /// Arithmetic operator insertion: `a + b` → `a + b + 1` (also `-1`).
-    Aoi,
-    /// Relational operator replacement: `<`↔`<=`, `>`↔`>=`, `==`↔`!=`.
+    /// Relational operator replacement: boundary (`<`↔`<=`, `>`↔`>=`) and
+    /// negation (`==`↔`!=`) flavors.
     Ror,
     /// Logical operator replacement: `&&`↔`||`.
     Lor,
-    /// Logical connector replacement: `&&`→`||` inside boolean expressions.
-    Lcr,
-    /// Conditional operator replacement: `a ? b : c` → `b` and → `c`.
+    /// Boolean term removal (conditional operator replacement for Go, which
+    /// has no ternary): `a && b` → `a`, `a || b` → `a` (right term).
     Cor,
-    /// Statement deletion: remove an expression/assignment/return statement.
+    /// Statement deletion: remove a call/assignment/inc-dec statement.
     Sdl,
     /// Return value replacement: `return x` → `return` (zero value).
     Rvr,
-    /// Loop increment/decrement swap: `i++` ↔ `i--` in for-clauses.
+    /// Loop increment/decrement swap: `i++` ↔ `i--`.
     Inc,
+    /// Loop boundary: `for i < n` ↔ `for i <= n` in C-style loop conditions.
+    Lbr,
+    /// Integer literal increment/decrement: `42` → `43` and `42` → `41`.
+    Ili,
 }
 
-pub const ALL_OPERATORS: [Operator; 10] = [
+pub const ALL_OPERATORS: [Operator; 9] = [
     Operator::Aor,
-    Operator::Aod,
-    Operator::Aoi,
     Operator::Ror,
     Operator::Lor,
-    Operator::Lcr,
     Operator::Cor,
     Operator::Sdl,
     Operator::Rvr,
     Operator::Inc,
+    Operator::Lbr,
+    Operator::Ili,
 ];
 
 impl fmt::Display for Operator {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let s = match self {
             Operator::Aor => "AOR",
-            Operator::Aod => "AOD",
-            Operator::Aoi => "AOI",
             Operator::Ror => "ROR",
             Operator::Lor => "LOR",
-            Operator::Lcr => "LCR",
             Operator::Cor => "COR",
             Operator::Sdl => "SDL",
             Operator::Rvr => "RVR",
             Operator::Inc => "INC",
+            Operator::Lbr => "LBR",
+            Operator::Ili => "ILI",
         };
         write!(f, "{s}")
     }
@@ -95,14 +97,14 @@ pub struct Replacement {
 pub fn replacements_for(op: Operator, source: &str) -> Vec<Replacement> {
     match op {
         Operator::Aor => arith_replacements(source),
-        Operator::Aod => aod_replacements(source),
-        Operator::Aoi => aoi_replacements(source),
         Operator::Ror => relational_replacements(source),
-        Operator::Lor | Operator::Lcr => logical_replacements(source),
+        Operator::Lor => logical_replacements(source),
         Operator::Cor => conditional_replacements(source),
         Operator::Sdl => statement_deletions(source),
         Operator::Rvr => return_replacements(source),
         Operator::Inc => inc_replacements(source),
+        Operator::Lbr => loop_boundary_replacements(source),
+        Operator::Ili => int_literal_replacements(source),
     }
 }
 
@@ -124,6 +126,12 @@ fn single_char_binary_op(source: &str, i: usize) -> Option<char> {
         }
     }
     Some(c)
+}
+
+/// Snap a byte index down to the nearest UTF-8 char boundary. Scanners walk
+/// bytes but must never slice mid-char (non-ASCII comments are legal Go).
+fn bd(source: &str, i: usize) -> usize {
+    source.floor_char_boundary(i)
 }
 
 /// AOR: swap arithmetic operators. `+`↔`-`, `*`↔`/`, `%`→`*`.
@@ -158,104 +166,102 @@ fn arith_replacements(source: &str) -> Vec<Replacement> {
     out
 }
 
-/// AOD: delete the arithmetic operator, keeping the left operand.
-/// `a + b` → `a b` is invalid Go, so we delete the operator AND the right
-/// operand's leading context — the viable form is `a` (drop `+ b`).
-fn aod_replacements(source: &str) -> Vec<Replacement> {
+/// LBR: loop boundary swap — `<`↔`<=` / `>`↔`>=` inside C-style
+/// for-loop conditions (`for i < n; ...`). Same replacement set as the
+/// relational boundary flavor, applied only when the comparison is the
+/// condition of a `for` statement.
+fn loop_boundary_replacements(source: &str) -> Vec<Replacement> {
     let mut out = Vec::new();
     let bytes = source.as_bytes();
-    for (i, _c) in source.char_indices() {
-        if let Some(op) = single_char_binary_op(source, i) {
-            // Extend to the end of the right operand: skip whitespace then
-            // consume until a comma, close paren, semicolon, or line boundary.
-            let mut j = i + op.len_utf8();
-            while j < bytes.len() && (bytes[j] as char).is_whitespace() && bytes[j] != b'\n' {
+    let mut i = 0;
+    while i < bytes.len() {
+        // Find a for keyword.
+        if bytes[i..].starts_with(b"for")
+            && (i == 0 || !(bytes[i - 1] as char).is_ascii_alphanumeric())
+        {
+            let mut j = i + 3;
+            while j < bytes.len() && (bytes[j] as char).is_whitespace() {
                 j += 1;
             }
-            while j < bytes.len() {
-                let ch = bytes[j] as char;
-                if matches!(ch, ',' | ')' | ';' | '}' | '\n') {
-                    break;
+            // Skip `for range` and `for {` (no C-style condition).
+            if j < bytes.len() && !bytes[j..].starts_with(b"range") && bytes[j] != b'{' {
+                // Scan the condition for a bare < or > (not <= >= << >> or <-).
+                while j < bytes.len() && bytes[j] != b'{' {
+                    let c = bytes[j] as char;
+                    if c == '<' || c == '>' {
+                        let next_ok = j + 1 >= bytes.len() || {
+                            let n = bytes[j + 1] as char;
+                            !matches!(n, '=' | '<' | '>' | '-')
+                        };
+                        if next_ok {
+                            out.push(Replacement {
+                                label: if c == '<' { "< → <=" } else { "> → >=" }.to_string(),
+                                start: j,
+                                end: j + 1,
+                                text: if c == '<' { "<=" } else { ">=" }.to_string(),
+                            });
+                        }
+                    }
+                    j += 1;
                 }
-                j += 1;
             }
-            out.push(Replacement {
-                label: format!("{op} operand deleted"),
-                start: i,
-                end: j,
-                text: String::new(),
-            });
+            i = j.max(i + 3);
+            continue;
         }
+        i += 1;
     }
     out
 }
 
-/// AOI: insert `+ 1` (and `- 1`) after the right operand of an arithmetic
-/// binary expression. `a + b` → `a + b + 1` / `a + b - 1`.
-fn aoi_replacements(source: &str) -> Vec<Replacement> {
+/// ILI: integer literal increment/decrement — `42` → `43` and `42` → `41`.
+/// Targets decimal integer literals (including 0); skips negative signs and
+/// hex/octal/binary/float forms.
+fn int_literal_replacements(source: &str) -> Vec<Replacement> {
     let mut out = Vec::new();
     let bytes = source.as_bytes();
-    for (i, _c) in source.char_indices() {
-        if let Some(op) = single_char_binary_op(source, i) {
-            // Find end of right operand: past whitespace, until , ) ; \n or
-            // a following binary operator (to avoid nested churn).
-            let mut j = i + op.len_utf8();
-            while j < bytes.len() && (bytes[j] as char).is_whitespace() && bytes[j] != b'\n' {
-                j += 1;
+    let mut i = 0;
+    while i < bytes.len() {
+        let c = bytes[i] as char;
+        if c.is_ascii_digit() {
+            let start = i;
+            while i < bytes.len() && (bytes[i] as char).is_ascii_digit() {
+                i += 1;
             }
-            let operand_start = j;
-            let mut depth = 0i32;
-            while j < bytes.len() {
-                let ch = bytes[j] as char;
-                match ch {
-                    '(' => depth += 1,
-                    ')' => {
-                        if depth == 0 {
-                            break;
-                        }
-                        depth -= 1;
-                    }
-                    ',' | ';' | '\n' if depth == 0 => break,
-                    '+' | '-' | '*' | '/' | '%' if depth == 0 && j > operand_start => {
-                        // A second operator starts a new sub-expression only if
-                        // it's not part of ++/-- or a unary sign directly after
-                        // an operator or open paren.
-                        let prev = bytes[j - 1] as char;
-                        if matches!(prev, '+' | '-' | '*' | '/' | '%' | '(' | '=' | '<' | '>')
-                            || (j + 1 < bytes.len() && matches!(bytes[j + 1] as char, '=' | '+'))
-                        {
-                            // part of compound/inc — keep scanning
-                        } else {
-                            break;
-                        }
-                    }
-                    _ => {}
+            let end = i;
+            let lit = &source[start..end];
+            // Skip 0-prefixed forms (octal), and any literal adjacent to
+            // identifier or float context (0o17's "17", 3.14's "3", x42b).
+            let prev_ok = start == 0 || {
+                let p = bytes[start - 1] as char;
+                !(p.is_ascii_alphanumeric() || p == '_' || p == '.')
+            };
+            let next_ok = end >= bytes.len() || {
+                let n = bytes[end] as char;
+                !(n.is_ascii_alphanumeric() || n == '_' || n == '.')
+            };
+            let plain_decimal = lit.len() <= 5 && !lit.starts_with('0') && prev_ok && next_ok;
+            if plain_decimal {
+                let v: i64 = lit.parse().unwrap_or(0);
+                if v < i64::MAX {
+                    out.push(Replacement {
+                        label: format!("{lit} → {}", v + 1),
+                        start,
+                        end,
+                        text: (v + 1).to_string(),
+                    });
                 }
-                j += 1;
+                if v > i64::MIN {
+                    out.push(Replacement {
+                        label: format!("{lit} → {}", v - 1),
+                        start,
+                        end,
+                        text: (v - 1).to_string(),
+                    });
+                }
             }
-            let end = j;
-            // Trim trailing whitespace inside the range (keep the operand).
-            let mut insert_at = end;
-            while insert_at > operand_start
-                && (bytes[insert_at - 1] as char).is_whitespace()
-                && bytes[insert_at - 1] != b'\n'
-            {
-                insert_at -= 1;
-            }
-            let operand = &source[operand_start..insert_at];
-            out.push(Replacement {
-                label: "right operand + 1".to_string(),
-                start: operand_start,
-                end: insert_at,
-                text: format!("{operand} + 1"),
-            });
-            out.push(Replacement {
-                label: "right operand - 1".to_string(),
-                start: operand_start,
-                end: insert_at,
-                text: format!("{operand} - 1"),
-            });
+            continue;
         }
+        i += 1;
     }
     out
 }
@@ -266,12 +272,13 @@ fn relational_replacements(source: &str) -> Vec<Replacement> {
     let bytes = source.as_bytes();
     let mut i = 0;
     while i + 1 < bytes.len() {
-        let two = &source[i..i + 2];
+        // Byte slicing — never panics on mid-char positions (i advances by 1).
+        let two = &bytes[i..i + 2];
         let (label, text) = match two {
-            "==" => ("== → !=", "!="),
-            "!=" => ("!= → ==", "=="),
-            "<=" => ("<= → <", "<"),
-            ">=" => (">= → >", ">"),
+            b"==" => ("== → !=", "!="),
+            b"!=" => ("!= → ==", "=="),
+            b"<=" => ("<= → <", "<"),
+            b">=" => (">= → >", ">"),
             _ => {
                 i += 1;
                 continue;
@@ -320,10 +327,10 @@ fn logical_replacements(source: &str) -> Vec<Replacement> {
     let bytes = source.as_bytes();
     let mut i = 0;
     while i + 1 < bytes.len() {
-        let two = &source[i..i + 2];
+        let two = &bytes[i..i + 2];
         let (label, text) = match two {
-            "&&" => ("&& → ||", "||"),
-            "||" => ("|| → &&", "&&"),
+            b"&&" => ("&& → ||", "||"),
+            b"||" => ("|| → &&", "&&"),
             _ => {
                 i += 1;
                 continue;
@@ -351,9 +358,9 @@ fn conditional_replacements(source: &str) -> Vec<Replacement> {
     let bytes = source.as_bytes();
     let mut i = 0;
     while i + 1 < bytes.len() {
-        let two = &source[i..i + 2];
+        let two = &bytes[i..i + 2];
         let op = match two {
-            "&&" | "||" => two,
+            b"&&" | b"||" => two,
             _ => {
                 i += 1;
                 continue;
@@ -375,14 +382,15 @@ fn conditional_replacements(source: &str) -> Vec<Replacement> {
             }
             end += 1;
         }
+        let end = bd(source, end);
         let mut text = String::new();
         let mut insert_at = end;
         while insert_at > j && (bytes[insert_at - 1] as char).is_whitespace() {
             insert_at -= 1;
         }
-        text.push_str(&source[insert_at..end]);
+        text.push_str(&source[insert_at..bd(source, end)]);
         out.push(Replacement {
-            label: format!("{op} right term removed"),
+            label: format!("{} right term removed", std::str::from_utf8(op).unwrap()),
             start: j,
             end,
             text,
@@ -419,7 +427,7 @@ fn statement_deletions(source: &str) -> Vec<Replacement> {
                 ')' => depth -= 1,
                 ';' if depth == 0 => {
                     // Delete [line_start, j+1) — the statement plus terminator.
-                    let stmt = &source[line_start..j];
+                    let stmt = &source[line_start..bd(source, j)];
                     let trimmed = stmt.trim();
                     if !trimmed.is_empty()
                         && !trimmed.starts_with("//")
@@ -461,21 +469,38 @@ fn statement_deletions(source: &str) -> Vec<Replacement> {
                     break;
                 }
                 '\n' if depth == 0 => {
-                    // No semicolon (Go allows omitting). Only delete if the
-                    // line is a full statement ending in `)` or identifier
-                    // (call/assign without `;`).
-                    let stmt = &source[line_start..j];
+                    // No semicolon (Go allows omitting). Delete when the line
+                    // is a deletable statement: a call, an assignment
+                    // (x = y / s += x), or an inc/dec expression. Declarations
+                    // and control keywords are excluded above; deleting a
+                    // declaration yields a compile_error mutant (acceptable).
+                    let stmt = &source[line_start..bd(source, j)];
                     let trimmed = stmt.trim();
+                    let callish = trimmed.contains('(')
+                        || trimmed.contains('=')
+                        || trimmed.ends_with("++")
+                        || trimmed.ends_with("--");
+                    // `:=` short declarations are declarations, not deletable
+                    // statements: removing them is a compile error, which the
+                    // small-fixture contract (100% kill) forbids. Lines ending
+                    // in `{` are block openers (for/if/switch headers) — their
+                    // "statement" text belongs to control structure, deleting
+                    // it is a compile error.
+                    let not_short_decl = !trimmed.contains(":=");
+                    let not_block_opener = !trimmed.ends_with('{');
                     if !trimmed.is_empty()
                         && !trimmed.starts_with("//")
                         && !trimmed.starts_with("/*")
-                        && (trimmed.ends_with(')') || trimmed.ends_with('}'))
+                        && callish
+                        && not_short_decl
+                        && not_block_opener
                         && !trimmed.starts_with("func ")
                         && !trimmed.starts_with("if ")
                         && !trimmed.starts_with("for ")
                         && !trimmed.starts_with("switch ")
                         && !trimmed.starts_with("select")
                         && !trimmed.starts_with("case ")
+                        && !trimmed.starts_with("default")
                         && !trimmed.starts_with("type ")
                         && !trimmed.starts_with("var ")
                         && !trimmed.starts_with("const ")
@@ -527,7 +552,7 @@ fn return_replacements(source: &str) -> Vec<Replacement> {
     let bytes = source.as_bytes();
     let mut i = 0;
     while i + 6 < bytes.len() {
-        if source[i..].starts_with("return") {
+        if bytes[i..].starts_with(b"return") {
             let after = bytes.get(i + 6).copied().unwrap_or(b' ');
             if after == b' ' || after == b'\t' {
                 let mut j = i + 6;
@@ -557,6 +582,7 @@ fn return_replacements(source: &str) -> Vec<Replacement> {
                     while trim_end > j && (bytes[trim_end - 1] as char).is_whitespace() {
                         trim_end -= 1;
                     }
+                    let trim_end = bd(source, trim_end);
                     let expr = &source[j..trim_end];
                     // Skip multi-value returns `a, b` (M2's ErrReturnSwap) —
                     // replacing with bare `return` would change arity. Only
@@ -585,10 +611,10 @@ fn inc_replacements(source: &str) -> Vec<Replacement> {
     let bytes = source.as_bytes();
     let mut i = 0;
     while i + 1 < bytes.len() {
-        let two = &source[i..i + 2];
+        let two = &bytes[i..i + 2];
         let (label, text) = match two {
-            "++" => ("++ → --", "--"),
-            "--" => ("-- → ++", "++"),
+            b"++" => ("++ → --", "--"),
+            b"--" => ("-- → ++", "++"),
             _ => {
                 i += 1;
                 continue;
@@ -625,29 +651,35 @@ mod tests {
     }
 
     #[test]
-    fn aod_deletes_right_operand() {
-        let src = "y := a + b;";
-        let reps = replacements_for(Operator::Aod, src);
-        assert!(!reps.is_empty());
-        let r = &reps[0];
-        assert_eq!(&src[r.start..r.end], "+ b");
+    fn lbr_swaps_loop_boundaries() {
+        // C-style for condition: bare < becomes <=.
+        let src = "for i := 0; i < n; i++ { }";
+        let reps = replacements_for(Operator::Lbr, src);
+        assert_eq!(reps.len(), 1);
+        assert_eq!(reps[0].label, "< → <=");
+        assert_eq!(&src[reps[0].start..reps[0].end], "<");
+
+        // Range loops and for{} have no condition — no mutants.
+        assert!(replacements_for(Operator::Lbr, "for _, x := range xs { }").is_empty());
+        assert!(replacements_for(Operator::Lbr, "for { break }").is_empty());
+
+        // A comparison outside a for is not an LBR target.
+        assert!(replacements_for(Operator::Lbr, "if a < b { }").is_empty());
     }
 
     #[test]
-    fn aoi_inserts_inc_dec() {
-        let src = "z := a + b;";
-        let reps = replacements_for(Operator::Aoi, src);
+    fn ili_inc_dec_literals() {
+        let src = "x := 42";
+        let reps = replacements_for(Operator::Ili, src);
         assert_eq!(reps.len(), 2);
-        assert!(reps.iter().any(|r| r.text.ends_with(" + 1")));
-        assert!(reps.iter().any(|r| r.text.ends_with(" - 1")));
-        // Replacement applied to source yields valid arithmetic text.
-        let applied = format!(
-            "{}{}{}",
-            &src[..reps[0].start],
-            reps[0].text,
-            &src[reps[0].end..]
-        );
-        assert_eq!(applied, "z := a + b + 1;");
+        assert!(reps.iter().any(|r| r.label == "42 → 43"));
+        assert!(reps.iter().any(|r| r.label == "42 → 41"));
+        assert!(reps.iter().any(|r| r.text == "43"));
+        assert!(reps.iter().any(|r| r.text == "41"));
+
+        // Zero-prefixed (octal) and floats are skipped.
+        assert!(replacements_for(Operator::Ili, "x := 0o17").is_empty());
+        assert!(replacements_for(Operator::Ili, "x := 3.14").is_empty());
     }
 
     #[test]

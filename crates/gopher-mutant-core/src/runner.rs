@@ -78,6 +78,7 @@ pub fn run_mutant(
     // whole tree on timeout.
     let mut cmd = Command::new("go");
     cmd.arg("test")
+        .arg("-count=1")
         .arg("-overlay")
         .arg(&overlay_json_path)
         .arg(".")
@@ -170,11 +171,19 @@ pub fn run_mutant(
     })
 }
 
-/// Read a Go coverage profile (text format) and return the set of
-/// `file:startLine` identities covered. Used by the classifier to
-/// distinguish covered vs not_covered survivors (GOAL-1 criterion 4).
-pub fn covered_lines(profile: &str) -> std::collections::HashSet<(String, usize)> {
-    let mut set = std::collections::HashSet::new();
+/// One coverage block from a Go coverprofile: file, start line, end line.
+#[derive(Debug, Clone)]
+pub struct CoverageBlock {
+    pub file: String,
+    pub start_line: usize,
+    pub end_line: usize,
+}
+
+/// Parse a Go coverage profile (text format) into blocks. The profile
+/// stores import-path-qualified paths (`module/pkg/file.go`); matching
+/// against module-relative identities is suffix-based (see [`covered_by`]).
+pub fn covered_blocks(profile: &str) -> Vec<CoverageBlock> {
+    let mut out = Vec::new();
     for line in profile.lines().skip(1) {
         // format: <file>:<startLine>.<startCol>,<endLine>.<endCol> <stmts> <count>
         let Some(colon) = line.find(':') else {
@@ -182,20 +191,49 @@ pub fn covered_lines(profile: &str) -> std::collections::HashSet<(String, usize)
         };
         let file = line[..colon].to_string();
         let rest = &line[colon + 1..];
-        let Some(dot) = rest.find('.') else { continue };
+        let Some(comma) = rest.find(',') else {
+            continue;
+        };
+        let Some(dot) = rest[..comma].find('.') else {
+            continue;
+        };
         let Ok(start_line) = rest[..dot].parse::<usize>() else {
             continue;
         };
-        set.insert((file, start_line));
+        let end_part = &rest[comma + 1..];
+        let Some(dot2) = end_part.find('.') else {
+            continue;
+        };
+        let Ok(end_line) = end_part[..dot2].parse::<usize>() else {
+            continue;
+        };
+        out.push(CoverageBlock {
+            file,
+            start_line,
+            end_line,
+        });
     }
-    set
+    out
 }
 
-/// Run the module's full test suite once to (a) confirm baseline green and
+/// Is `rel_path:line` covered by any block in the profile? The profile
+/// qualifies paths with the module/import path, so match on the trailing
+/// slash-separated suffix of the profile path (platform-safe, per research
+/// #2 file-identity). A line is covered when it falls inside a block's
+/// [start_line, end_line] range.
+pub fn covered_by(blocks: &[CoverageBlock], rel_path: &str, line: usize) -> bool {
+    let suffix = format!("/{rel_path}");
+    blocks.iter().any(|b| {
+        line >= b.start_line
+            && line <= b.end_line
+            && (b.file == rel_path || b.file.ends_with(&suffix))
+    })
+}
 /// (b) collect the coverage profile used for covered/not_covered.
 pub fn baseline_coverage(module_root: &Path, coverprofile_path: &Path) -> Result<(bool, Vec<u8>)> {
     let mut cmd = Command::new("go");
     cmd.arg("test")
+        .arg("-count=1")
         .arg("-coverprofile")
         .arg(coverprofile_path)
         .arg(".")
@@ -218,10 +256,24 @@ mod tests {
     #[test]
     fn covered_lines_parses_profile() {
         let profile = "mode: set\npkg/calc.go:3.5,5.2 2 1\npkg/calc.go:7.1,9.2 1 0\n";
-        let set = covered_lines(profile);
-        assert_eq!(set.len(), 2);
-        assert!(set.contains(&("pkg/calc.go".to_string(), 3)));
-        assert!(set.contains(&("pkg/calc.go".to_string(), 7)));
+        let blocks = covered_blocks(profile);
+        assert_eq!(blocks.len(), 2);
+        assert_eq!(blocks[0].start_line, 3);
+        assert_eq!(blocks[0].end_line, 5);
+        assert_eq!(blocks[1].start_line, 7);
+        assert_eq!(blocks[1].end_line, 9);
+    }
+
+    #[test]
+    fn covered_by_matches_ranges_and_suffix() {
+        let profile = "mode: set\ngithub.com/acme/mod/calc.go:10.1,12.2 2 1\n";
+        let blocks = covered_blocks(profile);
+        assert!(covered_by(&blocks, "calc.go", 10));
+        assert!(covered_by(&blocks, "calc.go", 12));
+        assert!(!covered_by(&blocks, "calc.go", 13));
+        // Wrong dir: suffix /sub/calc.go does not match .../calc.go.
+        assert!(!covered_by(&blocks, "sub/calc.go", 10));
+        assert!(!covered_by(&blocks, "other.go", 10));
     }
 
     #[test]

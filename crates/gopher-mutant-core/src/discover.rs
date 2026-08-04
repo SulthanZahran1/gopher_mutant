@@ -76,10 +76,13 @@ pub fn discover(module_root: &Path, operators: &[Operator]) -> Result<Discovery>
             .replace('\\', "/");
         let source = std::fs::read_to_string(&abs)
             .with_context(|| format!("failed to read {}", abs.display()))?;
+        // Scan the masked text (comments/strings blanked) so operators only
+        // fire on real code; byte offsets are identical to the original.
+        let masked = crate::parse::mask_non_code(&source);
 
         let mut points = Vec::new();
         for op in operators {
-            for rep in replacements_for(*op, &source) {
+            for rep in replacements_for(*op, &masked) {
                 let (line, column) = line_col(&source, rep.start);
                 points.push(MutationPoint {
                     file: rel.clone(),

@@ -38,14 +38,19 @@ pub fn write_patched_file(
 }
 
 /// Build the overlay JSON map for one mutant:
-/// `{ "<abs original>": "<abs patched>" }`.
+/// `{ "Replace": { "<abs original>": "<abs patched>" } }`.
+///
+/// NOTE: Go ≥1.22 requires the `Replace` wrapper field; the bare flat map is
+/// silently ignored (observed on go1.26.2: every mutant survived).
 pub fn overlay_json(original_abs: &Path, patched_abs: &Path) -> Result<String> {
-    let mut map = serde_json::Map::new();
-    map.insert(
+    let mut replace = serde_json::Map::new();
+    replace.insert(
         original_abs.to_string_lossy().to_string(),
         serde_json::Value::String(patched_abs.to_string_lossy().to_string()),
     );
-    Ok(serde_json::to_string(&serde_json::Value::Object(map))?)
+    let mut root = serde_json::Map::new();
+    root.insert("Replace".to_string(), serde_json::Value::Object(replace));
+    Ok(serde_json::to_string(&serde_json::Value::Object(root))?)
 }
 
 #[cfg(test)]
@@ -85,6 +90,7 @@ mod tests {
     #[test]
     fn overlay_json_maps_paths() {
         let j = overlay_json(Path::new("/orig/calc.go"), Path::new("/ovl/calc.go")).unwrap();
+        assert!(j.contains("\"Replace\""));
         assert!(j.contains("/orig/calc.go"));
         assert!(j.contains("/ovl/calc.go"));
     }
