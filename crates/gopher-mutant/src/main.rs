@@ -15,8 +15,9 @@ use gopher_mutant_core::classify::{Classification, Outcome, Report};
 use gopher_mutant_core::discover::{discover, MutationPoint};
 use gopher_mutant_core::operators::{Operator, ALL_OPERATORS};
 use gopher_mutant_core::runner::{baseline_coverage, run_mutant};
+use rayon::prelude::*;
 use serde::Serialize;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use std::time::Instant;
 
 /// Mutation testing for Go — the deepest operator set in the field.
@@ -46,6 +47,10 @@ struct Cli {
     /// Per-mutant timeout in seconds. Default 60.
     #[arg(long, default_value_t = 60)]
     timeout: u64,
+
+    /// Parallel mutant workers. Default: number of CPUs.
+    #[arg(long)]
+    parallel: Option<usize>,
 }
 
 #[derive(Serialize)]
@@ -154,39 +159,80 @@ fn run(cli: &Cli) -> Result<i32> {
     }
     let covered = gopher_mutant_core::runner::covered_blocks(&coverage);
 
-    // Overlay scratch dir.
-    let overlay_dir =
+    // Overlay scratch root.
+    let overlay_root =
         std::env::temp_dir().join(format!("gopher-mutant-{}-overlay", std::process::id()));
-    let _ = std::fs::remove_dir_all(&overlay_dir);
-    std::fs::create_dir_all(&overlay_dir)
-        .with_context(|| format!("failed to create {}", overlay_dir.display()))?;
+    let _ = std::fs::remove_dir_all(&overlay_root);
+    std::fs::create_dir_all(&overlay_root)
+        .with_context(|| format!("failed to create {}", overlay_root.display()))?;
 
     let started = Instant::now();
     let timeout = std::time::Duration::from_secs(cli.timeout.max(1));
-    let mut classifications = Vec::with_capacity(discovery.total);
 
+    // Collect all (file, source, point) work items up front — sources are
+    // read once, then mutants run in parallel with per-mutant scratch dirs.
+    let mut work: Vec<(String, String, MutationPoint, usize)> = Vec::new();
     for (idx, fd) in discovery.files.iter().enumerate() {
         let abs = module_root.join(&fd.file);
         let source = std::fs::read_to_string(&abs)
             .with_context(|| format!("failed to read {}", abs.display()))?;
         for mp in &fd.points {
-            classifications.push(run_one(
-                &module_root,
-                &source,
-                mp,
-                &overlay_dir,
-                timeout,
-                &covered,
-                idx,
-            )?);
+            work.push((fd.file.clone(), source.clone(), mp.clone(), idx));
         }
     }
+
+    let workers = cli.parallel.unwrap_or_else(|| {
+        std::thread::available_parallelism()
+            .map(|n| n.get())
+            .unwrap_or(4)
+    });
+    let pool = rayon::ThreadPoolBuilder::new()
+        .num_threads(workers)
+        .build()
+        .context("failed to build rayon pool")?;
+
+    let covered_ref = &covered;
+    let classifications = pool.install(|| -> Result<Vec<Classification>> {
+        work.par_iter()
+            .enumerate()
+            .map(|(i, (file, source, mp, idx))| {
+                let dir = overlay_root.join(format!("m{i}"));
+                let _ = std::fs::create_dir_all(&dir);
+                let overlay_json_path = dir.join("overlay.json");
+                let run = run_mutant(&module_root, mp, source, &overlay_json_path, &dir, timeout)?;
+                let outcome = match run.kind() {
+                    gopher_mutant_core::runner::RunKind::Timeout => Outcome::Timeout,
+                    gopher_mutant_core::runner::RunKind::CompileError => Outcome::CompileError,
+                    gopher_mutant_core::runner::RunKind::Failed => Outcome::Killed,
+                    gopher_mutant_core::runner::RunKind::Passed => {
+                        if gopher_mutant_core::runner::covered_by(covered_ref, file, mp.line) {
+                            Outcome::Survived
+                        } else {
+                            Outcome::NotCovered
+                        }
+                    }
+                };
+                Ok(Classification {
+                    id: *idx,
+                    file: file.clone(),
+                    line: mp.line,
+                    column: mp.column,
+                    operator: mp.operator.to_string(),
+                    label: mp.label.clone(),
+                    outcome,
+                    duration_ms: run.duration.as_millis(),
+                    covered: gopher_mutant_core::runner::covered_by(covered_ref, file, mp.line),
+                })
+            })
+            .collect::<Result<Vec<_>>>()
+            .context("mutant run failed")
+    })?;
 
     let elapsed = started.elapsed().as_millis();
     let report = Report::new(classifications, elapsed, cli.threshold);
 
     // Clean up overlay scratch.
-    let _ = std::fs::remove_dir_all(&overlay_dir);
+    let _ = std::fs::remove_dir_all(&overlay_root);
 
     if cli.json {
         let out = RunOutput {
@@ -202,43 +248,6 @@ fn run(cli: &Cli) -> Result<i32> {
     }
 
     Ok(if report.below_threshold { 1 } else { 0 })
-}
-
-/// Run one mutant and classify it.
-fn run_one(
-    module_root: &Path,
-    source: &str,
-    mp: &MutationPoint,
-    overlay_dir: &Path,
-    timeout: std::time::Duration,
-    covered: &[gopher_mutant_core::runner::CoverageBlock],
-    idx: usize,
-) -> Result<Classification> {
-    let run = run_mutant(module_root, mp, source, overlay_dir, timeout)?;
-    let outcome = match run.kind() {
-        gopher_mutant_core::runner::RunKind::Timeout => Outcome::Timeout,
-        gopher_mutant_core::runner::RunKind::CompileError => Outcome::CompileError,
-        gopher_mutant_core::runner::RunKind::Failed => Outcome::Killed,
-        gopher_mutant_core::runner::RunKind::Passed => {
-            if gopher_mutant_core::runner::covered_by(covered, &mp.file, mp.line) {
-                Outcome::Survived
-            } else {
-                Outcome::NotCovered
-            }
-        }
-    };
-    let covered_flag = gopher_mutant_core::runner::covered_by(covered, &mp.file, mp.line);
-    Ok(Classification {
-        id: idx,
-        file: mp.file.clone(),
-        line: mp.line,
-        column: mp.column,
-        operator: mp.operator.to_string(),
-        label: mp.label.clone(),
-        outcome,
-        duration_ms: run.duration.as_millis(),
-        covered: covered_flag,
-    })
 }
 
 fn print_console(r: &Report) {

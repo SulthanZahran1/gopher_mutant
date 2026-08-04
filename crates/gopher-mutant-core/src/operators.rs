@@ -116,6 +116,11 @@ fn single_char_binary_op(source: &str, i: usize) -> Option<char> {
     if !matches!(c, '+' | '-' | '*' | '/' | '%') {
         return None;
     }
+    // Skip ++/-- pairs: a +/- preceded by the same char is part of an
+    // inc/dec token, not a binary operator.
+    if matches!(c, '+' | '-') && i > 0 && matches!(b[i - 1] as char, '+' | '-') {
+        return None;
+    }
     // Skip compound / multi-char ops: next char is one of = < > & | - * etc.
     if let Some(&n) = b.get(i + 1) {
         if matches!(
@@ -347,13 +352,10 @@ fn logical_replacements(source: &str) -> Vec<Replacement> {
     out
 }
 
-/// COR: conditional (ternary) operator replacement — Go has no ternary, so
-/// this targets `if/else` value expressions? No — COR in the generic set maps
-/// to boolean-expression term removal (`a && b` → `a` and → `b`), which is
-/// dart_mutant's LCR-style connector semantics. Keep both directions.
+/// COR: conditional operator replacement for Go (no ternary) = boolean term
+/// removal: `a && b` → `a`, `a || b` → `a` — remove the operator AND its
+/// right term, so the result is always valid Go (`if a {`, `x = a;`).
 fn conditional_replacements(source: &str) -> Vec<Replacement> {
-    // For Go, COR = short-circuit operand removal: `a && b` → `a`, `a || b` → `a`.
-    // (Full if/else restructuring is out of M1's generic scope.)
     let mut out = Vec::new();
     let bytes = source.as_bytes();
     let mut i = 0;
@@ -366,7 +368,7 @@ fn conditional_replacements(source: &str) -> Vec<Replacement> {
                 continue;
             }
         };
-        // Right operand: skip whitespace, consume until , ) ; \n or && ||.
+        // Right term: skip whitespace, consume until , ) ; { } \n or && ||.
         let mut j = i + 2;
         while j < bytes.len() && (bytes[j] as char).is_whitespace() && bytes[j] != b'\n' {
             j += 1;
@@ -374,7 +376,7 @@ fn conditional_replacements(source: &str) -> Vec<Replacement> {
         let mut end = j;
         while end < bytes.len() {
             let ch = bytes[end] as char;
-            if matches!(ch, ',' | ')' | ';' | '\n') {
+            if matches!(ch, ',' | ')' | ';' | '\n' | '{' | '}') {
                 break;
             }
             if end + 1 < bytes.len() && matches!(&bytes[end..end + 2], b"&&" | b"||") {
@@ -383,19 +385,19 @@ fn conditional_replacements(source: &str) -> Vec<Replacement> {
             end += 1;
         }
         let end = bd(source, end);
-        let mut text = String::new();
-        let mut insert_at = end;
-        while insert_at > j && (bytes[insert_at - 1] as char).is_whitespace() {
-            insert_at -= 1;
+        // Trim trailing whitespace so the removal leaves clean text.
+        let mut trim_end = end;
+        while trim_end > j && (bytes[trim_end - 1] as char).is_whitespace() {
+            trim_end -= 1;
         }
-        text.push_str(&source[insert_at..bd(source, end)]);
+        let trim_end = bd(source, trim_end);
         out.push(Replacement {
             label: format!("{} right term removed", std::str::from_utf8(op).unwrap()),
-            start: j,
-            end,
-            text,
+            // Remove the operator AND its right term: `a && b` → `a`.
+            start: i,
+            end: trim_end,
+            text: String::new(),
         });
-        let _ = text;
         i = end.max(i + 2);
     }
     out
@@ -546,7 +548,15 @@ fn statement_deletions(source: &str) -> Vec<Replacement> {
     out
 }
 
-/// RVR: replace `return <expr>` with `return` (zero-value return).
+/// RVR: replace `return <expr>` with a zero-value return.
+///
+/// M1 limitation (documented in GOAL-1): Go requires a return value, and
+/// replacing `return x` with bare `return` only compiles with named results.
+/// Without type info (M2's gopls pass), the SOUND case is syntactically
+/// boolean expressions — comparisons/logicals are always `bool`, so
+/// `return x > 0` → `return false` compiles and is a real mutant. Other
+/// expressions (int/string/identifier returns) are skipped in M1; they
+/// classify as compile_error instead of killing the fixture's 100% MSI.
 fn return_replacements(source: &str) -> Vec<Replacement> {
     let mut out = Vec::new();
     let bytes = source.as_bytes();
@@ -584,16 +594,25 @@ fn return_replacements(source: &str) -> Vec<Replacement> {
                     }
                     let trim_end = bd(source, trim_end);
                     let expr = &source[j..trim_end];
-                    // Skip multi-value returns `a, b` (M2's ErrReturnSwap) —
-                    // replacing with bare `return` would change arity. Only
-                    // single-expression returns.
+                    // Skip multi-value returns `a, b` (M2's ErrReturnSwap).
+                    // Only single-expression returns are candidates.
                     if !expr.contains(',') {
-                        out.push(Replacement {
-                            label: format!("return {expr} → return"),
-                            start: j,
-                            end: trim_end,
-                            text: String::new(),
-                        });
+                        // Sound bool detection: comparisons and logical
+                        // operators imply a bool expression.
+                        let is_bool_expr = ["==", "!=", "<=", ">=", "<", ">", "&&", "||"]
+                            .iter()
+                            .any(|op| expr.contains(op));
+                        if is_bool_expr {
+                            out.push(Replacement {
+                                label: format!("return {expr} → return false"),
+                                start: j,
+                                end: trim_end,
+                                text: "false".to_string(),
+                            });
+                        }
+                        // Non-bool returns need type info (M2 gopls pass) —
+                        // skipped here so M1 never fabricates invalid
+                        // zero-values.
                     }
                     i = end;
                     continue;
@@ -710,11 +729,19 @@ mod tests {
 
     #[test]
     fn cor_removes_right_term() {
+        // Operator AND its right term are removed: `a && b` → `a`.
         let src = "ok := a && b;";
         let reps = replacements_for(Operator::Cor, src);
         assert_eq!(reps.len(), 1);
         assert_eq!(reps[0].text, "");
-        assert_eq!(&src[reps[0].start..reps[0].end], "b");
+        assert_eq!(&src[reps[0].start..reps[0].end], "&& b");
+        let applied = format!(
+            "{}{}{}",
+            &src[..reps[0].start],
+            reps[0].text,
+            &src[reps[0].end..]
+        );
+        assert_eq!(applied, "ok := a ;");
     }
 
     #[test]
@@ -743,15 +770,19 @@ mod tests {
     }
 
     #[test]
-    fn rvr_replaces_return_value() {
-        let src = "func f() int {\n    return a + b;\n}\n";
+    fn rvr_replaces_bool_return_value() {
+        // Bool expressions are sound zero-value candidates in M1.
+        let src = "func f() bool {\n    return a > b;\n}\n";
         let reps = replacements_for(Operator::Rvr, src);
         assert_eq!(reps.len(), 1);
-        assert_eq!(reps[0].text, "");
-        assert_eq!(&src[reps[0].start..reps[0].end], "a + b");
-        // Multi-value returns skipped (M2 ErrReturnSwap territory).
-        let src2 = "func g() (int, int) {\n    return 1, 2;\n}\n";
+        assert_eq!(reps[0].text, "false");
+        assert_eq!(&src[reps[0].start..reps[0].end], "a > b");
+        // Non-bool expressions need type info (M2 gopls pass) — skipped in M1.
+        let src2 = "func g() int {\n    return a + b;\n}\n";
         assert!(replacements_for(Operator::Rvr, src2).is_empty());
+        // Multi-value returns skipped (M2 ErrReturnSwap territory).
+        let src3 = "func h() (int, int) {\n    return 1, 2;\n}\n";
+        assert!(replacements_for(Operator::Rvr, src3).is_empty());
     }
 
     #[test]

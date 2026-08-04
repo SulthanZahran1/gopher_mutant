@@ -50,19 +50,22 @@ pub const DEFAULT_TIMEOUT: Duration = Duration::from_secs(60);
 /// Run `go test` for one mutant using an overlay file, in a fresh process
 /// group so a runaway test (infinite loop) can be killed without leaving
 /// orphans. Returns the raw run result.
+///
+/// `overlay_json_path` and `patch_dir` are per-mutant (the caller owns their
+/// uniqueness) — parallel workers must never share an overlay.json path.
 pub fn run_mutant(
     module_root: &Path,
     mp: &MutationPoint,
     source: &str,
-    overlay_dir: &Path,
+    overlay_json_path: &Path,
+    patch_dir: &Path,
     timeout: Duration,
 ) -> Result<RunResult> {
     let patched = crate::mutate::apply_mutant(source, mp);
-    let patched_path = write_patched_file(overlay_dir, module_root, &mp.file, &patched)?;
+    let patched_path = write_patched_file(patch_dir, module_root, &mp.file, &patched)?;
     let original_abs = module_root.join(&mp.file);
-    let overlay_json_path = overlay_dir.join("overlay.json");
     std::fs::write(
-        &overlay_json_path,
+        overlay_json_path,
         overlay_json(&original_abs, &patched_path)?,
     )
     .with_context(|| {
@@ -80,7 +83,7 @@ pub fn run_mutant(
     cmd.arg("test")
         .arg("-count=1")
         .arg("-overlay")
-        .arg(&overlay_json_path)
+        .arg(overlay_json_path)
         .arg(".")
         .current_dir(module_root)
         .stdout(Stdio::null())
