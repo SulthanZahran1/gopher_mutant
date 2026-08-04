@@ -82,6 +82,7 @@ pub fn run_mutant(
     let mut cmd = Command::new("go");
     cmd.arg("test")
         .arg("-count=1")
+        .arg("-vet=off")
         .arg("-overlay")
         .arg(overlay_json_path)
         .arg(".")
@@ -237,6 +238,7 @@ pub fn baseline_coverage(module_root: &Path, coverprofile_path: &Path) -> Result
     let mut cmd = Command::new("go");
     cmd.arg("test")
         .arg("-count=1")
+        .arg("-vet=off")
         .arg("-coverprofile")
         .arg(coverprofile_path)
         .arg(".")
