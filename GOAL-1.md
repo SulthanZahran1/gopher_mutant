@@ -1,6 +1,6 @@
 # GOAL 0.1.0 — gopher_mutant: M1 engine skeleton
 
-> **Status:** draft (proposed 2026-08-04). Locking is a human act — see Human check.
+> **Status:** 🔒 **locked** (locked 2026-08-04 by human — criteria frozen; changes require human renegotiation).
 > **Prerequisite:** none — first milestone.
 > **Scope decided in wayfinder ticket #6:** M1 is the engine skeleton only — parse, discover, overlay patch, run, classify, console report. No idiomatic operators yet (M2), no speed features (M3), no TCE/reports/distribution (M4).
 
