@@ -3,6 +3,7 @@ resolver = "2"
 members = [
     "crates/gopher-mutant",
     "crates/gopher-mutant-core",
+    "crates/gopher-mutant-tests",
 ]
 
 [workspace.package]
