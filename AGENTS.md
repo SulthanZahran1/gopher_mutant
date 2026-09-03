@@ -6,8 +6,8 @@ AST-based mutation testing for Go — the deepest operator set in the field. Bui
 
 ## Status
 
-- **M1 (GOAL-1, 0.1.0)**: engine skeleton — parse, discover, overlay patch, run, classify (killed/survived/not_covered/compile_error/timeout), console + JSON report. **Locked, in progress.**
-- M2–M4 (GOAL-2..4): drafted, not started.
+- **M1 (GOAL-1, 0.1.0)**: engine skeleton — parse, discover, overlay patch, run, classify (killed/survived/not_covered/compile_error/timeout), console + JSON report. **Signed off 2026-09-03** (merged to main via PR #8; <5s gate renegotiated to 30s regression bound, fix deferred to M3 pre-built test binary).
+- **M2 (GOAL-2, 0.2.0)**: all 22 operators (12 Go-idiomatic + 10 generic), small/medium/large fixture suite, compile-error <2%. **Locked 2026-09-03, in progress.**
 
 ## Agent skills
 
