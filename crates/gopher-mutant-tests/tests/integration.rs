@@ -157,15 +157,20 @@ fn dry_run_reports_points_per_operator() {
     let (code, stdout, stderr) = run_bin(&["--path", small.to_str().unwrap(), "--dry-run"]);
     assert_eq!(code, 0, "dry-run exit code; stderr: {stderr}");
     let d: DryRun = serde_json::from_str(&stdout).expect("valid dry-run JSON");
-    assert!(
-        (20..=30).contains(&d.total),
-        "small fixture mutant count {} must be in 20-30",
-        d.total
-    );
-    // All 9 M1 operators present.
+    assert_eq!(d.total, 22, "small fixture has the locked 22-mutant shape");
+    // The small fixture exercises every generic class plus DeferRemoval.
     let ops: Vec<&str> = d.operators.iter().map(|s| s.as_str()).collect();
     for want in [
-        "AOR", "ROR", "LOR", "COR", "SDL", "RVR", "INC", "LBR", "ILI",
+        "AOR",
+        "ROR",
+        "LOR",
+        "COR",
+        "SDL",
+        "RVR",
+        "INC",
+        "LBR",
+        "ILI",
+        "DeferRemoval",
     ] {
         assert!(ops.contains(&want), "operator {want} missing: {ops:?}");
     }
@@ -175,7 +180,16 @@ fn dry_run_reports_points_per_operator() {
     // Point shape sanity: 1-based positions, known operator names.
     // JSON serializes operators in snake_case (aor) — compare case-insensitively.
     let valid_ops = [
-        "AOR", "ROR", "LOR", "COR", "SDL", "RVR", "INC", "LBR", "ILI",
+        "AOR",
+        "ROR",
+        "LOR",
+        "COR",
+        "SDL",
+        "RVR",
+        "INC",
+        "LBR",
+        "ILI",
+        "defer_removal",
     ];
     for f in &d.files {
         for p in &f.points {
@@ -189,6 +203,15 @@ fn dry_run_reports_points_per_operator() {
             );
         }
     }
+    assert_eq!(
+        d.files[0]
+            .points
+            .iter()
+            .filter(|p| p.operator == "defer_removal")
+            .count(),
+        1,
+        "small fixture must include exactly one DeferRemoval mutant"
+    );
 }
 
 // ---------------------------------------------------------------------------
@@ -228,11 +251,7 @@ fn classification_is_consistent_and_kills_everything() {
     // Small fixture contract: 100% kill, no survivors, no not_covered.
     assert_eq!(r.survived, 0, "no survivors allowed in the small fixture");
     assert_eq!(r.not_covered, 0, "every line is covered by design");
-    assert!(
-        (20..=30).contains(&r.total),
-        "mutant count {} in 20-30",
-        r.total
-    );
+    assert_eq!(r.total, 22, "small fixture has the locked 22-mutant shape");
     assert!(
         (r.mutation_score - 100.0).abs() < 1e-9,
         "MSI must be 100%, got {}",

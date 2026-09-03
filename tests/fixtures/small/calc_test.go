@@ -2,103 +2,73 @@ package calc
 
 import "testing"
 
-// Every assertion below kills at least one mutant; boundary inputs are
-// deliberate (see calc.go comments). Nothing here may be weakened or the
-// fixture's 100% kill contract breaks.
-
 func TestAdd(t *testing.T) {
-	if Add(1, 2) != 3 {
-		t.Fatal("Add(1, 2) != 3")
-	}
-	if Add(0, 0) != 0 {
-		t.Fatal("Add(0, 0) != 0")
+	if Add(1, 2) != 3 || Add(0, 0) != 0 {
+		t.Fatal("Add returned the wrong value")
 	}
 }
 
 func TestMul(t *testing.T) {
-	if Mul(3, 4) != 12 {
-		t.Fatal("Mul(3, 4) != 12")
-	}
-	if Mul(0, 7) != 0 {
-		t.Fatal("Mul(0, 7) != 0")
+	if Mul(3, 4) != 12 || Mul(0, 7) != 0 {
+		t.Fatal("Mul returned the wrong value")
 	}
 }
 
 func TestIsPositive(t *testing.T) {
-	if !IsPositive(5) {
-		t.Fatal("IsPositive(5) should be true")
-	}
-	if IsPositive(0) {
-		t.Fatal("IsPositive(0) should be false")
-	}
-	if IsPositive(-1) {
-		t.Fatal("IsPositive(-1) should be false")
-	}
-}
-
-func TestSumEven(t *testing.T) {
-	if SumEven(6) != 6 {
-		t.Fatal("SumEven(6) != 6")
-	}
-	if SumEven(0) != 0 {
-		t.Fatal("SumEven(0) != 0")
-	}
-	if SumEven(1) != 0 {
-		t.Fatal("SumEven(1) != 0")
+	if !IsPositive(5) || IsPositive(0) || IsPositive(-1) {
+		t.Fatal("IsPositive returned the wrong value")
 	}
 }
 
 func TestIsInRange(t *testing.T) {
-	if !IsInRange(5, 0, 10) {
-		t.Fatal("IsInRange(5, 0, 10) should be true")
-	}
-	if !IsInRange(0, 0, 10) {
-		t.Fatal("IsInRange(0, 0, 10) should be true (lo edge)")
-	}
-	if !IsInRange(10, 0, 10) {
-		t.Fatal("IsInRange(10, 0, 10) should be true (hi edge)")
-	}
-	if IsInRange(-1, 0, 10) {
-		t.Fatal("IsInRange(-1, 0, 10) should be false")
-	}
-	if IsInRange(15, 0, 10) {
-		t.Fatal("IsInRange(15, 0, 10) should be false")
+	for _, test := range []struct {
+		value int
+		want  bool
+	}{
+		{value: 5, want: true},
+		{value: 0, want: true},
+		{value: 10, want: true},
+		{value: -1, want: false},
+		{value: 15, want: false},
+	} {
+		if got := IsInRange(test.value, 0, 10); got != test.want {
+			t.Fatalf("IsInRange(%d) = %v, want %v", test.value, got, test.want)
+		}
 	}
 }
 
-func TestSum(t *testing.T) {
-	if Sum([]int{1, 2, 3}) != 6 {
-		t.Fatal("Sum([]int{1, 2, 3}) != 6")
-	}
-	if Sum(nil) != 0 {
-		t.Fatal("Sum(nil) != 0")
+func TestSumEven(t *testing.T) {
+	if SumEven(6) != 6 || SumEven(0) != 0 || SumEven(1) != 0 {
+		t.Fatal("SumEven returned the wrong value")
 	}
 }
 
 func TestCountClamped(t *testing.T) {
-	// Values strictly outside [lo, hi] are counted. Assertions assert ORIGINAL
-	// behavior — every mutant deviates on one of these inputs:
-	//   x < lo → x <= lo: killed by [0] (mutant counts 0, original doesn't)
-	//   x > hi → x >= hi: killed by [10]
-	//   || → &&:           killed by [5, 15] (only 15 is outside)
-	//   right-term removal: killed by [15] (mutant sees only x < lo)
-	//   left-term removal:  killed by [-1] (mutant sees only x > hi)
-	if CountClamped([]int{5}, 0, 10) != 0 {
-		t.Fatal("CountClamped([5], 0, 10) != 0")
+	cases := []struct {
+		value int
+		want  int
+	}{
+		{value: 5, want: 0},
+		{value: 0, want: 0},
+		{value: 10, want: 0},
+		{value: 15, want: 1},
+		{value: -1, want: 1},
 	}
-	if CountClamped([]int{0}, 0, 10) != 0 {
-		t.Fatal("CountClamped([0], 0, 10) != 0 (0 is inside)")
+	for _, test := range cases {
+		if got := CountClamped(test.value, 0, 10); got != test.want {
+			t.Fatalf("CountClamped(%d) = %d, want %d", test.value, got, test.want)
+		}
 	}
-	if CountClamped([]int{10}, 0, 10) != 0 {
-		t.Fatal("CountClamped([10], 0, 10) != 0 (10 is inside)")
+}
+
+func TestOffset(t *testing.T) {
+	if Offset(3) != 6 {
+		t.Fatal("Offset returned the wrong value")
 	}
-	if CountClamped([]int{15}, 0, 10) != 1 {
-		t.Fatal("CountClamped([15], 0, 10) != 1")
-	}
-	if CountClamped([]int{-1}, 0, 10) != 1 {
-		t.Fatal("CountClamped([-1], 0, 10) != 1")
-	}
-	if CountClamped([]int{5, 15}, 0, 10) != 1 {
-		t.Fatal("CountClamped([5, 15], 0, 10) != 1")
+}
+
+func TestDeferredValue(t *testing.T) {
+	if DeferredValue() != 1 {
+		t.Fatal("DeferredValue returned the wrong value")
 	}
 }
