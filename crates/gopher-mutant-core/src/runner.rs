@@ -47,20 +47,25 @@ impl RunResult {
 /// M1 fixed per-mutant timeout (GOAL-1: adaptive timeouts land in M3).
 pub const DEFAULT_TIMEOUT: Duration = Duration::from_secs(60);
 
-/// Run `go test` for one mutant using an overlay file, in a fresh process
-/// group so a runaway test (infinite loop) can be killed without leaving
-/// orphans. Returns the raw run result.
-///
-/// `overlay_json_path` and `patch_dir` are per-mutant (the caller owns their
-/// uniqueness) — parallel workers must never share an overlay.json path.
-pub fn run_mutant(
+/// One routed test invocation: a package (module-relative dir, `.` for the
+/// root package) and a `-run` regex selecting its covering tests.
+#[derive(Debug, Clone)]
+pub struct RunSpec {
+    pub pkg_dir: String,
+    pub pattern: String,
+    /// Human label for the report (the covering test names).
+    pub label: String,
+}
+
+/// Prepare the patched file + overlay JSON for a mutant. Shared by the
+/// full-suite and routed paths.
+fn prepare_overlay(
     module_root: &Path,
     mp: &MutationPoint,
     source: &str,
     overlay_json_path: &Path,
     patch_dir: &Path,
-    timeout: Duration,
-) -> Result<RunResult> {
+) -> Result<()> {
     let patched = crate::mutate::apply_mutant(source, mp);
     let patched_path = write_patched_file(patch_dir, module_root, &mp.file, &patched)?;
     let original_abs = module_root.join(&mp.file);
@@ -74,19 +79,33 @@ pub fn run_mutant(
             overlay_json_path.display()
         )
     })?;
+    Ok(())
+}
 
+/// Run `go test` once against the overlay, in a fresh process group so a
+/// runaway test (infinite loop) can be killed without leaving orphans.
+/// `pkg_dir` is the module-relative package dir (`.` for root); `run_pattern`
+/// is an optional `-run` regex (routed runs).
+fn run_go_test(
+    module_root: &Path,
+    pkg_dir: &str,
+    overlay_json_path: &Path,
+    run_pattern: Option<&str>,
+    timeout: Duration,
+) -> Result<RunResult> {
     let started = Instant::now();
 
-    // Run go test with the overlay. Use a process group so we can kill the
-    // whole tree on timeout.
     let mut cmd = Command::new("go");
     cmd.arg("test")
         .arg("-count=1")
         .arg("-vet=off")
         .arg("-overlay")
-        .arg(overlay_json_path)
-        .arg(".")
-        .current_dir(module_root)
+        .arg(overlay_json_path);
+    if let Some(pattern) = run_pattern {
+        cmd.arg("-run").arg(pattern);
+    }
+    cmd.arg(".")
+        .current_dir(module_root.join(pkg_dir))
         .stdout(Stdio::null())
         .stderr(Stdio::piped());
 
@@ -173,6 +192,58 @@ pub fn run_mutant(
             .rev()
             .collect(),
     })
+}
+
+/// Run `go test` for one mutant using an overlay file, in a fresh process
+/// group so a runaway test (infinite loop) can be killed without leaving
+/// orphans. Returns the raw run result.
+///
+/// `overlay_json_path` and `patch_dir` are per-mutant (the caller owns their
+/// uniqueness) — parallel workers must never share an overlay.json path.
+pub fn run_mutant(
+    module_root: &Path,
+    mp: &MutationPoint,
+    source: &str,
+    overlay_json_path: &Path,
+    patch_dir: &Path,
+    timeout: Duration,
+) -> Result<RunResult> {
+    prepare_overlay(module_root, mp, source, overlay_json_path, patch_dir)?;
+    run_go_test(module_root, ".", overlay_json_path, None, timeout)
+}
+
+/// Run a mutant against a set of routed test invocations (per-package
+/// `-run` regexes), short-circuiting on the first non-passed result.
+/// Returns the final run result and the labels of the tests executed.
+pub fn run_mutant_routed(
+    module_root: &Path,
+    mp: &MutationPoint,
+    source: &str,
+    overlay_json_path: &Path,
+    patch_dir: &Path,
+    timeout: Duration,
+    specs: &[RunSpec],
+) -> Result<(RunResult, Vec<String>)> {
+    prepare_overlay(module_root, mp, source, overlay_json_path, patch_dir)?;
+    let mut tests_run = Vec::new();
+    let mut final_result = None;
+    for spec in specs {
+        tests_run.push(spec.label.clone());
+        let result = run_go_test(
+            module_root,
+            &spec.pkg_dir,
+            overlay_json_path,
+            Some(&spec.pattern),
+            timeout,
+        )?;
+        let kind = result.kind();
+        let stop = !matches!(kind, RunKind::Passed);
+        final_result = Some(result);
+        if stop {
+            break;
+        }
+    }
+    Ok((final_result.unwrap(), tests_run))
 }
 
 /// One coverage block from a Go coverprofile: file, start line, end line.
