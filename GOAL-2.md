@@ -1,6 +1,10 @@
 # GOAL 0.2.0 — gopher_mutant: M2 operators + fixtures
 
-> **Status:** 🔒 **locked** (locked 2026-09-03 by human — criteria frozen; changes require human renegotiation).
+> **Status:** ✅ **signed-off** (signed off 2026-09-03 by human after the live M2 receipt review; criteria frozen — changes require human renegotiation). See Human check.
+> **Sign-off notes (2026-09-03):**
+> 1. **Operator count renegotiated: 21 classes, not 22.** The locked prose says 10 generic + 12 idiomatic; M1 shipped 9 generic enum variants (ROR covers boundary AND negation as one class). M2 implements 9 generic + 12 idiomatic = 21 operator classes. Documented in README §Operator set.
+> 2. **Large-fixture warm <30s bound deferred to M3.** Requires the content-addressed cache (M3 scope). Cold run verified 100.5s < 10min ✓.
+> 3. All other criteria verified live: small 22/22 @100% MSI (5.2s); medium 90 mutants 64/17/3/3/3 @76.2% MSI, all 21 classes exercised; large 390 mutants 235/142/6/4/3 @61.4% MSI; compile-error rate 7/502 = 1.39% < 2%; `--list-operators` (21); `--operators` gating + exit 2 on invalid/none; 48 tests green; fixture trees hash-verified untouched.
 > **Prerequisite:** GOAL-1.md (M1 engine skeleton) signed-off.
 > **Scope decided in wayfinder ticket #6 + #7:** all 22 operators (12 Go-idiomatic + 10 generic), small/medium/large fixture suite per the fixture sizing contract, compile-error rate <2%.
 

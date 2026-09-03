@@ -17,7 +17,7 @@ Each milestone file is independent and self-contained. A milestone moves through
 | File | Version | Focus | State | Human check |
 |---|---|---|---|---|
 | [GOAL-1.md](GOAL-1.md) | 0.1.0 | **M1 — Engine skeleton**: parse, discover, overlay patch, run, classify (killed/survived/not_covered/compile_error/timeout), console report | ✅ signed-off (2026-09-03) | Signed-off live demo (classification counts on small fixture) |
-| [GOAL-2.md](GOAL-2.md) | 0.2.0 | **M2 — Operators + fixtures**: all 22 operators (12 Go-idiomatic + 10 generic), small/medium/large fixture suite, compile-error <2% | 🔒 locked (2026-09-03) | Signed-off live demo (operator counts + MSI + compile-error rate) |
+| [GOAL-2.md](GOAL-2.md) | 0.2.0 | **M2 — Operators + fixtures**: all 22 operators (12 Go-idiomatic + 10 generic), small/medium/large fixture suite, compile-error <2% | ✅ signed-off (2026-09-03) | Signed-off live demo (operator counts + MSI + compile-error rate) |
 | [GOAL-3.md](GOAL-3.md) | 0.3.0 | **M3 — Speed**: per-test coverage routing, adaptive timeouts, parallel scheduler, content-addressed cache, incremental mode, `--mutant N` | 📝 draft | Signed-off live demo (benchmark vs gremlins on uuid/cobra + warm-rerun speedup) |
 | [GOAL-4.md](GOAL-4.md) | 1.0.0 | **M4 — TCE + reports + distribution**: TCE, Stryker/JUnit/HTML, threshold gate, agent JSON, install.sh, Homebrew tap, releases, CI + Windows | 📝 draft | Signed-off live demo (full release demo) |
 
