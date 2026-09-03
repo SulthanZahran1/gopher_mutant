@@ -24,9 +24,13 @@ use std::time::Instant;
 #[derive(Parser, Debug)]
 #[command(name = "gopher_mutant", version, about)]
 struct Cli {
-    /// Path to the Go module to test.
+    /// Path to the Go module to test (not needed with --list-operators).
+    #[arg(long, required_unless_present = "list_operators")]
+    path: Option<PathBuf>,
+
+    /// List every available operator and exit.
     #[arg(long)]
-    path: PathBuf,
+    list_operators: bool,
 
     /// Emit machine-readable JSON to stdout.
     #[arg(long)]
@@ -51,6 +55,13 @@ struct Cli {
     /// Parallel mutant workers. Default: number of CPUs.
     #[arg(long)]
     parallel: Option<usize>,
+}
+
+#[derive(Serialize)]
+struct ListOperatorsOutput {
+    schema_version: u32,
+    tool: String,
+    operators: Vec<String>,
 }
 
 #[derive(Serialize)]
@@ -79,24 +90,56 @@ fn main() -> Result<()> {
 }
 
 fn run(cli: &Cli) -> Result<i32> {
-    if !cli.path.exists() {
-        eprintln!("error: path does not exist: {}", cli.path.display());
+    let operator_names = || {
+        ALL_OPERATORS
+            .iter()
+            .map(|op| op.to_string())
+            .collect::<Vec<_>>()
+    };
+    if cli.list_operators {
+        if cli.json {
+            let output = ListOperatorsOutput {
+                schema_version: 1,
+                tool: "gopher_mutant".to_string(),
+                operators: operator_names(),
+            };
+            println!("{}", serde_json::to_string_pretty(&output)?);
+        } else {
+            for name in operator_names() {
+                println!("{name}");
+            }
+        }
+        return Ok(0);
+    }
+
+    let path = cli
+        .path
+        .as_ref()
+        .expect("clap requires --path unless --list-operators is present");
+    if !path.exists() {
+        eprintln!("error: path does not exist: {}", path.display());
         return Ok(2);
     }
-    if !cli.path.is_dir() {
-        eprintln!("error: path is not a directory: {}", cli.path.display());
+    if !path.is_dir() {
+        eprintln!("error: path is not a directory: {}", path.display());
         return Ok(2);
     }
 
     // Canonicalize so overlay JSON paths are absolute — `go test` resolves
     // overlay entries against its cwd, and relative entries silently no-op
     // (every mutant would survive).
-    let module_root = std::fs::canonicalize(&cli.path)
-        .with_context(|| format!("failed to canonicalize {}", cli.path.display()))?;
-    let cli_path_display = cli.path.display().to_string();
+    let module_root = std::fs::canonicalize(path)
+        .with_context(|| format!("failed to canonicalize {}", path.display()))?;
+    let cli_path_display = path.display().to_string();
 
     let operators: Vec<Operator> = match &cli.operators {
         Some(s) => {
+            if s.trim().eq_ignore_ascii_case("none")
+                || s.split(',').all(|name| name.trim().is_empty())
+            {
+                eprintln!("error: no operators selected; choose at least one operator");
+                return Ok(2);
+            }
             let mut ops = Vec::new();
             for name in s.split(',') {
                 let name = name.trim();
