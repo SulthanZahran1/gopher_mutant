@@ -51,8 +51,8 @@ fn is_go_source(name: &str) -> bool {
 }
 
 /// Walk `module_root` and discover mutation points for `operators`
-/// (default: all 10 generic). Skips test files, vendored/generated code,
-/// and `main.go` (no tests exercise main).
+/// (default: all 21 operator classes). Skips test files, vendored/generated
+/// code, and `main.go` (no tests exercise main).
 pub fn discover(module_root: &Path, operators: &[Operator]) -> Result<Discovery> {
     let mut files = Vec::new();
     let mut total = 0usize;

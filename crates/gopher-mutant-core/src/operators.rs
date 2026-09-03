@@ -183,10 +183,10 @@ pub struct Replacement {
 
 /// Find all replacements of the given operator in the source text.
 ///
-/// Implementations are pure — they never touch the filesystem. They receive
-/// the full source and scan it (tree-sitter-free, text-based) so the operator
-/// set stays independent of grammar versions. M1 deliberately keeps this
-/// simple and correct; grammar-driven discovery lands with M2.
+/// Implementations are pure — they never touch the filesystem. Generic M1
+/// operators scan the supplied source text; Go-idiomatic M2 operators parse
+/// the original source with tree-sitter-go so statement extents and fields
+/// remain precise.
 pub fn replacements_for(op: Operator, source: &str) -> Vec<Replacement> {
     match op {
         Operator::Aor => arith_replacements(source),
@@ -315,7 +315,7 @@ fn collect_idiomatic(
         }
         Operator::ChannelCloseRemoval if node.kind() == "expression_statement" => {
             if let Some(call) = named_descendant_kind(node, "call_expression") {
-                if function_is(call, source, "close") {
+                if function_is(call, source, "close") && has_one_argument(call) {
                     push_node_removal(out, source, node, "close call removed");
                 }
             }
@@ -493,6 +493,11 @@ fn function_is(call: tree_sitter::Node<'_>, source: &str, expected: &str) -> boo
         .is_some_and(|function| {
             function.kind() == "identifier" && node_text(source, function) == expected
         })
+}
+
+fn has_one_argument(call: tree_sitter::Node<'_>) -> bool {
+    call.child_by_field_name("arguments")
+        .is_some_and(|arguments| named_children(arguments).len() == 1)
 }
 
 fn receive_operand(node: tree_sitter::Node<'_>) -> Option<tree_sitter::Node<'_>> {
@@ -1310,6 +1315,16 @@ mod tests {
             apply(src, &reps[0]),
             "package p\nfunc f(err error) int {\n\t\n\treturn 0\n}\n"
         );
+
+        // The initializer form has the same condition node after parsing;
+        // retain it as a regression test for `if err := f(); err != nil`.
+        let initialized = "package p\nfunc f() int {\n\tif err := work(); err != nil {\n\t\treturn 1\n\t}\n\treturn 0\n}\n";
+        let initialized_reps = replacements_for(Operator::ErrCheckRemoval, initialized);
+        assert_eq!(initialized_reps.len(), 1);
+        assert_eq!(
+            apply(initialized, &initialized_reps[0]),
+            "package p\nfunc f() int {\n\t\n\treturn 0\n}\n"
+        );
     }
 
     #[test]
@@ -1352,6 +1367,8 @@ mod tests {
             apply(src, &reps[0]),
             "package p\nfunc f(ch chan int) {\n\t\n}\n"
         );
+        assert!(replacements_for(Operator::ChannelCloseRemoval, "close()").is_empty());
+        assert!(replacements_for(Operator::ChannelCloseRemoval, "close(a, b)").is_empty());
     }
 
     #[test]
@@ -1359,11 +1376,14 @@ mod tests {
         let src = "package p\nfunc f(ch chan int) {\n\tselect {\n\tcase <-ch:\n\t\twork()\n\tdefault:\n\t\tother()\n\t}\n}\n";
         let reps = replacements_for(Operator::SelectCaseRemoval, src);
         assert_eq!(reps.len(), 2);
-        for replacement in &reps {
-            let mutated = apply(src, replacement);
-            assert_ne!(mutated, src);
-            assert!(!mutated.contains(&src[replacement.start..replacement.end]));
-        }
+        assert_eq!(
+            apply(src, &reps[0]),
+            "package p\nfunc f(ch chan int) {\n\tselect {\n\t\tdefault:\n\t\tother()\n\t}\n}\n"
+        );
+        assert_eq!(
+            apply(src, &reps[1]),
+            "package p\nfunc f(ch chan int) {\n\tselect {\n\tcase <-ch:\n\t\twork()\n\t\t}\n}\n"
+        );
     }
 
     #[test]

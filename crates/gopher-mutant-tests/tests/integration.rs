@@ -103,6 +103,13 @@ fn md5(bytes: &[u8]) -> u128 {
 }
 
 #[derive(Deserialize)]
+struct ListOperators {
+    schema_version: u32,
+    tool: String,
+    operators: Vec<String>,
+}
+
+#[derive(Deserialize)]
 struct DryRun {
     total: usize,
     operators: Vec<String>,
@@ -145,11 +152,159 @@ struct Classification {
     outcome: String,
     file: String,
     line: usize,
+    operator: String,
+}
+
+const ALL_POINT_OPERATORS: [&str; 21] = [
+    "aor",
+    "ror",
+    "lor",
+    "cor",
+    "sdl",
+    "rvr",
+    "inc",
+    "lbr",
+    "ili",
+    "defer_removal",
+    "goroutine_removal",
+    "err_check_removal",
+    "err_return_swap",
+    "channel_direction",
+    "channel_close_removal",
+    "select_case_removal",
+    "range_break",
+    "map_iteration_swap",
+    "append_removal",
+    "slice_index_swap",
+    "recover_removal",
+];
+
+// ---------------------------------------------------------------------------
+// GOAL-2 criterion 1: operator listing
+// ---------------------------------------------------------------------------
+
+#[test]
+fn list_operators_prints_all_classes() {
+    let expected = [
+        "AOR",
+        "ROR",
+        "LOR",
+        "COR",
+        "SDL",
+        "RVR",
+        "INC",
+        "LBR",
+        "ILI",
+        "DeferRemoval",
+        "GoroutineRemoval",
+        "ErrCheckRemoval",
+        "ErrReturnSwap",
+        "ChannelDirection",
+        "ChannelCloseRemoval",
+        "SelectCaseRemoval",
+        "RangeBreak",
+        "MapIterationSwap",
+        "AppendRemoval",
+        "SliceIndexSwap",
+        "RecoverRemoval",
+    ];
+    let (code, stdout, stderr) = run_bin(&["--list-operators"]);
+    assert_eq!(code, 0, "list exit code; stderr: {stderr}");
+    let names: Vec<&str> = stdout.lines().collect();
+    assert_eq!(names, expected);
+
+    let (code, stdout, stderr) = run_bin(&["--list-operators", "--json"]);
+    assert_eq!(code, 0, "JSON list exit code; stderr: {stderr}");
+    let list: ListOperators = serde_json::from_str(&stdout).expect("valid list JSON");
+    assert_eq!(list.schema_version, 1);
+    assert_eq!(list.tool, "gopher_mutant");
+    assert_eq!(list.operators, expected);
 }
 
 // ---------------------------------------------------------------------------
-// GOAL-1 criterion 2: discovery
+// GOAL-2 criterion 7: operator gating
 // ---------------------------------------------------------------------------
+
+#[test]
+fn operator_gating_filters_and_rejects_bad_names() {
+    let small = fixture("small");
+    let (code, stdout, stderr) = run_bin(&[
+        "--path",
+        small.to_str().unwrap(),
+        "--dry-run",
+        "--json",
+        "--operators",
+        "ROR,SDL",
+    ]);
+    assert_eq!(code, 0, "gated dry-run exit; stderr: {stderr}");
+    let gated: DryRun = serde_json::from_str(&stdout).expect("valid gated JSON");
+    assert_eq!(gated.operators, vec!["ROR".to_string(), "SDL".to_string()]);
+    assert!(!gated.files.is_empty());
+    for file in &gated.files {
+        for point in &file.points {
+            assert!(
+                point.operator == "ror" || point.operator == "sdl",
+                "gated discovery emitted {}",
+                point.operator
+            );
+        }
+    }
+
+    let (code, _stdout, stderr) = run_bin(&[
+        "--path",
+        small.to_str().unwrap(),
+        "--dry-run",
+        "--operators",
+        "NOPE",
+    ]);
+    assert_eq!(code, 2);
+    assert!(stderr.contains("unknown operator"), "stderr: {stderr}");
+
+    let (code, _stdout, stderr) = run_bin(&[
+        "--path",
+        small.to_str().unwrap(),
+        "--dry-run",
+        "--operators",
+        "none",
+    ]);
+    assert_eq!(code, 2);
+    assert!(stderr.contains("no operators selected"), "stderr: {stderr}");
+}
+
+// ---------------------------------------------------------------------------
+// GOAL-2 criteria 4-5: fixture discovery shape and operator coverage
+// ---------------------------------------------------------------------------
+
+#[test]
+fn medium_and_large_discover_all_operator_classes() {
+    for (name, range, files) in [
+        ("medium", 80..=120, 4usize),
+        ("large", 300..=usize::MAX, 9usize),
+    ] {
+        let path = fixture(name);
+        let (code, stdout, stderr) =
+            run_bin(&["--path", path.to_str().unwrap(), "--dry-run", "--json"]);
+        assert_eq!(code, 0, "{name} dry-run exit; stderr: {stderr}");
+        let discovery: DryRun = serde_json::from_str(&stdout).expect("valid fixture dry-run JSON");
+        assert!(
+            range.contains(&discovery.total),
+            "{name} mutant count {} outside contract",
+            discovery.total
+        );
+        assert_eq!(discovery.files.len(), files, "{name} production file count");
+        let found: std::collections::BTreeSet<&str> = discovery
+            .files
+            .iter()
+            .flat_map(|file| file.points.iter().map(|point| point.operator.as_str()))
+            .collect();
+        for operator in ALL_POINT_OPERATORS {
+            assert!(
+                found.contains(operator),
+                "{name} missing operator {operator}"
+            );
+        }
+    }
+}
 
 #[test]
 fn dry_run_reports_points_per_operator() {
@@ -258,6 +413,12 @@ fn classification_is_consistent_and_kills_everything() {
         r.mutation_score
     );
     assert!(!r.below_threshold);
+    assert!(
+        r.classifications
+            .iter()
+            .any(|classification| classification.operator == "DeferRemoval"),
+        "small run must include a DeferRemoval classification"
+    );
     // Every classification has a stable file identity and a valid outcome.
     let valid_outcomes = [
         "killed",
