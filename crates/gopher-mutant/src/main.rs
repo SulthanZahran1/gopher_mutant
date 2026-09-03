@@ -251,11 +251,14 @@ fn run(cli: &Cli) -> Result<i32> {
     }
 
     // Baseline: confirm the module's tests pass and collect coverage.
+    // The baseline run's wall time feeds the adaptive timeout ceiling.
+    let baseline_started = Instant::now();
     let coverprofile =
         std::env::temp_dir().join(format!("gopher-mutant-{}-cover.out", std::process::id()));
     let (baseline_ok, _) =
         gopher_mutant_core::runner::baseline_coverage(&module_root, &coverprofile)
             .context("failed to run baseline go test")?;
+    let baseline_ms = baseline_started.elapsed().as_millis();
     let coverage = if coverprofile.exists() {
         std::fs::read_to_string(&coverprofile).unwrap_or_default()
     } else {
@@ -269,12 +272,15 @@ fn run(cli: &Cli) -> Result<i32> {
     }
     let covered = gopher_mutant_core::runner::covered_blocks(&coverage);
 
-    // Adaptive timeout: baseline x3 + 5s floor (GOAL-3 criterion 2). The
-    // fixed `--timeout 2` sentinel selects adaptive mode.
+    // Adaptive timeout: per GOAL-3 criterion 2 + research #2, the per-mutant
+    // timeout adapts to the covering tests' measured durations:
+    //   clamp(max(3 × sum(selected test durations) + 5s, 5s), ceiling)
+    // The `--timeout 2` sentinel selects adaptive mode. The ceiling is
+    // baseline × coefficient (3) + 5s floor, per the skill recipe.
     let adaptive = cli.timeout == 2;
-    let baseline_ms = baseline_duration_ms(&module_root);
+    let adaptive_ceiling = (baseline_ms.saturating_mul(3) + 5000).max(5000);
     let timeout = if adaptive {
-        Duration::from_millis((baseline_ms.saturating_mul(3) + 5000).max(5000) as u64)
+        Duration::from_millis(adaptive_ceiling as u64)
     } else {
         Duration::from_secs(cli.timeout.max(1))
     };
@@ -332,6 +338,7 @@ fn run(cli: &Cli) -> Result<i32> {
     let test_map_ref = &test_map;
     let changed_ref = &changed;
     let timeout_key = if adaptive { "adaptive" } else { "fixed" };
+    let adaptive_ceiling_ref = adaptive_ceiling;
 
     let classifications = pool.install(|| -> Result<Vec<Classification>> {
         work.par_iter()
@@ -344,15 +351,12 @@ fn run(cli: &Cli) -> Result<i32> {
                 // Cache key: content-addressed on source + tests + toolchain
                 // + routing mode + selected tests + timeout mode.
                 let source_hash = hash_str(source);
-                let tests: Vec<String> = if cli.no_routing {
+                let covering: Vec<TestCase> = if cli.no_routing {
                     Vec::new()
                 } else {
-                    test_map_ref
-                        .tests_for(file, mp.line)
-                        .iter()
-                        .map(|t| t.name.clone())
-                        .collect()
+                    test_map_ref.tests_for(file, mp.line)
                 };
+                let tests: Vec<String> = covering.iter().map(|t| t.name.clone()).collect();
                 let key = cache.key(
                     engine_version,
                     &toolchain,
@@ -442,12 +446,30 @@ fn run(cli: &Cli) -> Result<i32> {
                 }
 
                 // Execute: routed (covering tests only) or full suite.
+                // Adaptive mode: per-mutant timeout = clamp(3 × sum of
+                // covering test durations, 2s floor, baseline×3+5s ceiling).
+                // No per-mutant overhead term: the covering sums are honest
+                // now that benchmarks are excluded from the test map, and
+                // the 2s floor absorbs compile/startup variance.
+                let mutant_timeout = if adaptive {
+                    let sum = test_map_ref.sum_duration(&covering);
+                    Duration::from_millis(
+                        (sum.saturating_mul(3)).max(2000).min(adaptive_ceiling_ref) as u64,
+                    )
+                } else {
+                    timeout
+                };
                 let (run, tests_run) = if cli.no_routing {
-                    let r =
-                        run_mutant(&module_root, mp, source, &overlay_json_path, &dir, timeout)?;
+                    let r = run_mutant(
+                        &module_root,
+                        mp,
+                        source,
+                        &overlay_json_path,
+                        &dir,
+                        mutant_timeout,
+                    )?;
                     (r, vec!["full-suite".to_string()])
                 } else {
-                    let covering = test_map_ref.tests_for(file, mp.line);
                     if covering.is_empty() {
                         // No test covers this line: not_covered, no run.
                         let outcome = Classification {
@@ -513,7 +535,7 @@ fn run(cli: &Cli) -> Result<i32> {
                         source,
                         &overlay_json_path,
                         &dir,
-                        timeout,
+                        mutant_timeout,
                         &specs,
                     )?;
                     (r, run)
@@ -618,21 +640,6 @@ fn run(cli: &Cli) -> Result<i32> {
     }
 
     Ok(if report.below_threshold { 1 } else { 0 })
-}
-
-/// Baseline `go test` duration in ms (adaptive timeout input).
-fn baseline_duration_ms(module_root: &std::path::Path) -> u128 {
-    let started = Instant::now();
-    let _ = std::process::Command::new("go")
-        .arg("test")
-        .arg("-count=1")
-        .arg("-vet=off")
-        .arg(".")
-        .current_dir(module_root)
-        .stdout(std::process::Stdio::null())
-        .stderr(std::process::Stdio::null())
-        .output();
-    started.elapsed().as_millis()
 }
 
 /// Hash of all test files under the module (cache key input).

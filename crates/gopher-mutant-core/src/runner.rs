@@ -99,6 +99,7 @@ fn run_go_test(
     cmd.arg("test")
         .arg("-count=1")
         .arg("-vet=off")
+        .arg("-failfast")
         .arg("-overlay")
         .arg(overlay_json_path);
     if let Some(pattern) = run_pattern {

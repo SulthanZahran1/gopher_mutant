@@ -64,6 +64,11 @@ impl TestMap {
     pub fn sum_duration(&self, tests: &[TestCase]) -> u128 {
         tests.iter().map(|t| t.duration_ms).sum()
     }
+
+    /// Per-package summed duration (fallback when a line has no entry).
+    pub fn pkg_duration(&self, pkg: &str) -> u128 {
+        self.pkg_durations.get(pkg).copied().unwrap_or(0)
+    }
 }
 
 /// Build the per-test coverage map for a Go module.
@@ -223,6 +228,9 @@ fn read_module_path(module_root: &Path) -> Result<String> {
 }
 
 /// List top-level test function names in a package via `go test -list .`.
+/// Only `Test*` names are kept — `Benchmark*`/`Fuzz*`/`Example*` are not
+/// tests and must never be routed to (a `-run` regex matches them too, and
+/// benchmarks take ~1s each, inflating every routed run).
 fn list_tests(pkg_dir: &Path) -> Result<Vec<String>> {
     let out = Command::new("go")
         .arg("test")
@@ -245,6 +253,7 @@ fn list_tests(pkg_dir: &Path) -> Result<Vec<String>> {
                 && !l.starts_with("ok")
                 && !l.starts_with("?")
                 && !l.starts_with("no test")
+                && l.starts_with("Test")
         })
         .map(str::to_string)
         .collect())
