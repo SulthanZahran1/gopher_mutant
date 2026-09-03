@@ -181,6 +181,9 @@ pub struct CoverageBlock {
     pub file: String,
     pub start_line: usize,
     pub end_line: usize,
+    /// Execution count from the coverprofile. Zero means the block is not
+    /// covered by the baseline test suite.
+    pub count: u64,
 }
 
 /// Parse a Go coverage profile (text format) into blocks. The profile
@@ -211,10 +214,24 @@ pub fn covered_blocks(profile: &str) -> Vec<CoverageBlock> {
         let Ok(end_line) = end_part[..dot2].parse::<usize>() else {
             continue;
         };
+        let mut fields = end_part[dot2 + 1..].split_whitespace();
+        let Some(_end_column) = fields.next() else {
+            continue;
+        };
+        let Some(_statements) = fields.next() else {
+            continue;
+        };
+        let Some(count_text) = fields.next() else {
+            continue;
+        };
+        let Ok(count) = count_text.parse::<u64>() else {
+            continue;
+        };
         out.push(CoverageBlock {
             file,
             start_line,
             end_line,
+            count,
         });
     }
     out
@@ -228,7 +245,8 @@ pub fn covered_blocks(profile: &str) -> Vec<CoverageBlock> {
 pub fn covered_by(blocks: &[CoverageBlock], rel_path: &str, line: usize) -> bool {
     let suffix = format!("/{rel_path}");
     blocks.iter().any(|b| {
-        line >= b.start_line
+        b.count > 0
+            && line >= b.start_line
             && line <= b.end_line
             && (b.file == rel_path || b.file.ends_with(&suffix))
     })
@@ -265,17 +283,20 @@ mod tests {
         assert_eq!(blocks.len(), 2);
         assert_eq!(blocks[0].start_line, 3);
         assert_eq!(blocks[0].end_line, 5);
+        assert_eq!(blocks[0].count, 1);
         assert_eq!(blocks[1].start_line, 7);
         assert_eq!(blocks[1].end_line, 9);
+        assert_eq!(blocks[1].count, 0);
     }
 
     #[test]
     fn covered_by_matches_ranges_and_suffix() {
-        let profile = "mode: set\ngithub.com/acme/mod/calc.go:10.1,12.2 2 1\n";
+        let profile = "mode: set\ngithub.com/acme/mod/calc.go:10.1,12.2 2 1\ngithub.com/acme/mod/calc.go:20.1,22.2 2 0\n";
         let blocks = covered_blocks(profile);
         assert!(covered_by(&blocks, "calc.go", 10));
         assert!(covered_by(&blocks, "calc.go", 12));
         assert!(!covered_by(&blocks, "calc.go", 13));
+        assert!(!covered_by(&blocks, "calc.go", 20));
         // Wrong dir: suffix /sub/calc.go does not match .../calc.go.
         assert!(!covered_by(&blocks, "sub/calc.go", 10));
         assert!(!covered_by(&blocks, "other.go", 10));

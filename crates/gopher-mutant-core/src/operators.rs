@@ -547,6 +547,41 @@ fn single_char_binary_op(source: &str, i: usize) -> Option<char> {
     if matches!(c, '+' | '-') && i > 0 && matches!(b[i - 1] as char, '+' | '-') {
         return None;
     }
+    // A leading sign is unary, not an arithmetic binary operator. This also
+    // excludes the receive half of the channel operator (`<-ch`).
+    if matches!(c, '+' | '-') {
+        let mut left = i;
+        while left > 0 && (b[left - 1] as char).is_ascii_whitespace() {
+            left -= 1;
+        }
+        let binary_left = if left == 0 {
+            false
+        } else {
+            let previous = b[left - 1] as char;
+            if matches!(previous, '_' | ')' | ']' | '}') {
+                true
+            } else if previous.is_ascii_alphanumeric() {
+                let mut word_start = left - 1;
+                while word_start > 0 {
+                    let ch = b[word_start - 1] as char;
+                    if ch.is_ascii_alphanumeric() || ch == '_' {
+                        word_start -= 1;
+                    } else {
+                        break;
+                    }
+                }
+                !matches!(
+                    &source[word_start..left],
+                    "return" | "case" | "go" | "defer"
+                )
+            } else {
+                false
+            }
+        };
+        if !binary_left {
+            return None;
+        }
+    }
     // Skip compound / multi-char ops: next char is one of = < > & | - * etc.
     if let Some(&n) = b.get(i + 1) {
         if matches!(
@@ -1102,6 +1137,9 @@ mod tests {
         // Skip compound assignments: += must not match.
         let src2 = "x += 1;";
         assert!(replacements_for(Operator::Aor, src2).is_empty());
+        // Unary signs and channel receives are not binary arithmetic.
+        assert!(replacements_for(Operator::Aor, "return <-ch").is_empty());
+        assert!(replacements_for(Operator::Aor, "return -x").is_empty());
     }
 
     #[test]
