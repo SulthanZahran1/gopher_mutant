@@ -1,17 +1,19 @@
-//! The 10 generic mutation operator classes (M1 scope, GOAL-1).
+//! The generic and Go-idiomatic mutation operator classes.
 //!
-//! Each operator is a pure function: given the source text and a byte range,
-//! produce a set of (label, before, after) replacements. The M2 idiomatic
-//! operators will extend this same trait.
+//! Each operator is a pure function: given source text, produce a set of
+//! byte-stable replacements. Generic operators use the masked source supplied
+//! by discovery; idiomatic operators parse the original source with
+//! tree-sitter-go so statement extents and fields remain precise.
 
 use serde::Serialize;
 use std::fmt;
 
-/// The 10 generic operator classes, per GOAL-1 criterion 2 (locked):
-/// arithmetic swap, relational boundary, relational negation, logical swap,
-/// boolean term removal, increment/decrement, statement removal, return value
-/// removal, loop boundary, integer literal inc/dec. ROR emits both the
-/// boundary (<=↔<) and negation (==↔!=) flavors; LBR and ILI are distinct.
+/// The operator classes shipped by M2.
+///
+/// The locked GOAL-2 text says "22" because it counts ten generic operators,
+/// while the signed-off M1 implementation has nine generic variants: ROR
+/// intentionally emits both boundary and negation flavors. The executable
+/// therefore exposes **21 operator classes: 9 generic + 12 idiomatic**.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub enum Operator {
@@ -22,22 +24,45 @@ pub enum Operator {
     Ror,
     /// Logical operator replacement: `&&`↔`||`.
     Lor,
-    /// Boolean term removal (conditional operator replacement for Go, which
-    /// has no ternary): `a && b` → `a`, `a || b` → `a` (right term).
+    /// Boolean term removal: `a && b` → `a` and `a || b` → `a`.
     Cor,
     /// Statement deletion: remove a call/assignment/inc-dec statement.
     Sdl,
-    /// Return value replacement: `return x` → `return` (zero value).
+    /// Return value replacement for sound boolean expressions.
     Rvr,
     /// Loop increment/decrement swap: `i++` ↔ `i--`.
     Inc,
-    /// Loop boundary: `for i < n` ↔ `for i <= n` in C-style loop conditions.
+    /// Loop boundary: `for i < n` ↔ `for i <= n` in C-style loops.
     Lbr,
     /// Integer literal increment/decrement: `42` → `43` and `42` → `41`.
     Ili,
+    /// Remove an entire `defer` statement.
+    DeferRemoval,
+    /// Remove the `go` keyword from a goroutine statement.
+    GoroutineRemoval,
+    /// Remove an error guard whose condition compares a value with `nil`.
+    ErrCheckRemoval,
+    /// Swap the first two expressions in a two-expression return list.
+    ErrReturnSwap,
+    /// Flip a channel send into a receive, or a receive into a send of zero.
+    ChannelDirection,
+    /// Remove a statement calling the builtin `close`.
+    ChannelCloseRemoval,
+    /// Remove one communication or default case from a `select`.
+    SelectCaseRemoval,
+    /// Insert an early `break` at the start of a range-loop body.
+    RangeBreak,
+    /// Drop the first variable from a two-variable range clause.
+    MapIterationSwap,
+    /// Remove an assignment whose right-hand side calls `append`.
+    AppendRemoval,
+    /// Replace a slice-like index `s[i]` with `s[len(s)-1-i]`.
+    SliceIndexSwap,
+    /// Replace a call to the builtin `recover` with `nil`.
+    RecoverRemoval,
 }
 
-pub const ALL_OPERATORS: [Operator; 9] = [
+pub const ALL_OPERATORS: [Operator; 21] = [
     Operator::Aor,
     Operator::Ror,
     Operator::Lor,
@@ -47,6 +72,18 @@ pub const ALL_OPERATORS: [Operator; 9] = [
     Operator::Inc,
     Operator::Lbr,
     Operator::Ili,
+    Operator::DeferRemoval,
+    Operator::GoroutineRemoval,
+    Operator::ErrCheckRemoval,
+    Operator::ErrReturnSwap,
+    Operator::ChannelDirection,
+    Operator::ChannelCloseRemoval,
+    Operator::SelectCaseRemoval,
+    Operator::RangeBreak,
+    Operator::MapIterationSwap,
+    Operator::AppendRemoval,
+    Operator::SliceIndexSwap,
+    Operator::RecoverRemoval,
 ];
 
 impl fmt::Display for Operator {
@@ -61,18 +98,74 @@ impl fmt::Display for Operator {
             Operator::Inc => "INC",
             Operator::Lbr => "LBR",
             Operator::Ili => "ILI",
+            Operator::DeferRemoval => "DeferRemoval",
+            Operator::GoroutineRemoval => "GoroutineRemoval",
+            Operator::ErrCheckRemoval => "ErrCheckRemoval",
+            Operator::ErrReturnSwap => "ErrReturnSwap",
+            Operator::ChannelDirection => "ChannelDirection",
+            Operator::ChannelCloseRemoval => "ChannelCloseRemoval",
+            Operator::SelectCaseRemoval => "SelectCaseRemoval",
+            Operator::RangeBreak => "RangeBreak",
+            Operator::MapIterationSwap => "MapIterationSwap",
+            Operator::AppendRemoval => "AppendRemoval",
+            Operator::SliceIndexSwap => "SliceIndexSwap",
+            Operator::RecoverRemoval => "RecoverRemoval",
         };
         write!(f, "{s}")
     }
 }
 
 impl Operator {
-    /// Parse an operator name (display form or snake_case) — used by
-    /// `--operators` and unit tests.
+    /// Parse an operator name (display form or snake_case), case-insensitively.
     pub fn from_name(name: &str) -> Option<Operator> {
         ALL_OPERATORS.iter().copied().find(|op| {
-            op.to_string().eq_ignore_ascii_case(name) || op.to_string().to_lowercase() == name
+            op.to_string().eq_ignore_ascii_case(name) || serde_name(*op).eq_ignore_ascii_case(name)
         })
+    }
+
+    /// Whether this operator is implemented by the tree-sitter path.
+    pub const fn is_idiomatic(self) -> bool {
+        matches!(
+            self,
+            Operator::DeferRemoval
+                | Operator::GoroutineRemoval
+                | Operator::ErrCheckRemoval
+                | Operator::ErrReturnSwap
+                | Operator::ChannelDirection
+                | Operator::ChannelCloseRemoval
+                | Operator::SelectCaseRemoval
+                | Operator::RangeBreak
+                | Operator::MapIterationSwap
+                | Operator::AppendRemoval
+                | Operator::SliceIndexSwap
+                | Operator::RecoverRemoval
+        )
+    }
+}
+
+fn serde_name(op: Operator) -> &'static str {
+    match op {
+        Operator::Aor => "aor",
+        Operator::Ror => "ror",
+        Operator::Lor => "lor",
+        Operator::Cor => "cor",
+        Operator::Sdl => "sdl",
+        Operator::Rvr => "rvr",
+        Operator::Inc => "inc",
+        Operator::Lbr => "lbr",
+        Operator::Ili => "ili",
+        Operator::DeferRemoval => "defer_removal",
+        Operator::GoroutineRemoval => "goroutine_removal",
+        Operator::ErrCheckRemoval => "err_check_removal",
+        Operator::ErrReturnSwap => "err_return_swap",
+        Operator::ChannelDirection => "channel_direction",
+        Operator::ChannelCloseRemoval => "channel_close_removal",
+        Operator::SelectCaseRemoval => "select_case_removal",
+        Operator::RangeBreak => "range_break",
+        Operator::MapIterationSwap => "map_iteration_swap",
+        Operator::AppendRemoval => "append_removal",
+        Operator::SliceIndexSwap => "slice_index_swap",
+        Operator::RecoverRemoval => "recover_removal",
     }
 }
 
@@ -90,10 +183,10 @@ pub struct Replacement {
 
 /// Find all replacements of the given operator in the source text.
 ///
-/// Implementations are pure — they never touch the filesystem. They receive
-/// the full source and scan it (tree-sitter-free, text-based) so the operator
-/// set stays independent of grammar versions. M1 deliberately keeps this
-/// simple and correct; grammar-driven discovery lands with M2.
+/// Implementations are pure — they never touch the filesystem. Generic M1
+/// operators scan the supplied source text; Go-idiomatic M2 operators parse
+/// the original source with tree-sitter-go so statement extents and fields
+/// remain precise.
 pub fn replacements_for(op: Operator, source: &str) -> Vec<Replacement> {
     match op {
         Operator::Aor => arith_replacements(source),
@@ -105,11 +198,349 @@ pub fn replacements_for(op: Operator, source: &str) -> Vec<Replacement> {
         Operator::Inc => inc_replacements(source),
         Operator::Lbr => loop_boundary_replacements(source),
         Operator::Ili => int_literal_replacements(source),
+        idiomatic if idiomatic.is_idiomatic() => idiomatic_replacements(idiomatic, source),
+        _ => Vec::new(),
     }
 }
 
-/// Match a single-char binary operator at `i` in `source`, skipping
-/// `==`, `!=`, `<=`, `>=`, `&&`, `||`, `+=`, etc.
+/// Discover one of the Go-idiomatic operators with the owned tree-sitter
+/// tree. The function is deliberately pure: it parses only the supplied
+/// source and returns byte ranges into that same source. Type-dependent
+/// operators use the conservative heuristics documented on their enum
+/// variants; semantic rejection is left to the Go compiler.
+fn idiomatic_replacements(op: Operator, source: &str) -> Vec<Replacement> {
+    let Ok(parsed) = crate::parse::parse_go_file("_idiomatic.go", source) else {
+        return Vec::new();
+    };
+    let mut out = Vec::new();
+    collect_idiomatic(parsed.root(), source, op, &mut out);
+    out.sort_by(|a, b| (a.start, a.end, &a.label).cmp(&(b.start, b.end, &b.label)));
+    out
+}
+
+fn collect_idiomatic(
+    node: tree_sitter::Node<'_>,
+    source: &str,
+    op: Operator,
+    out: &mut Vec<Replacement>,
+) {
+    match op {
+        Operator::DeferRemoval if node.kind() == "defer_statement" => {
+            push_node_removal(out, source, node, "defer statement removed");
+        }
+        Operator::GoroutineRemoval if node.kind() == "go_statement" => {
+            // `go_statement` starts at the anonymous `go` token. Removing
+            // only those two bytes leaves the call as an expression statement.
+            let start = node.start_byte();
+            if source.get(start..start.saturating_add(2)) == Some("go") {
+                push_replacement(out, source, start, start + 2, "go keyword removed", "");
+            }
+        }
+        Operator::ErrCheckRemoval if node.kind() == "if_statement" => {
+            if is_error_guard(node, source) {
+                push_node_removal(out, source, node, "error check removed");
+            }
+        }
+        Operator::ErrReturnSwap if node.kind() == "return_statement" => {
+            if let Some(list) = named_child_kind(node, "expression_list") {
+                let expressions = named_children(list);
+                // Without type information, restrict the heuristic to exactly
+                // two expressions. This avoids rewriting variadic returns and
+                // makes the possible type mismatch an explicit compiler result.
+                if expressions.len() == 2 {
+                    let first = expressions[0];
+                    let second = expressions[1];
+                    let first_text = source[first.start_byte()..first.end_byte()].to_string();
+                    let second_text = source[second.start_byte()..second.end_byte()].to_string();
+                    push_replacement(
+                        out,
+                        source,
+                        first.start_byte(),
+                        second.end_byte(),
+                        "return expressions swapped",
+                        &format!("{second_text}, {first_text}"),
+                    );
+                }
+            }
+        }
+        Operator::ChannelDirection if node.kind() == "send_statement" => {
+            if let Some(channel) = node.child_by_field_name("channel") {
+                let channel_text = node_text(source, channel).to_string();
+                push_replacement(
+                    out,
+                    source,
+                    node.start_byte(),
+                    node.end_byte(),
+                    "channel send changed to receive",
+                    &format!("<-{channel_text}"),
+                );
+            }
+        }
+        Operator::ChannelDirection if node.kind() == "receive_statement" => {
+            if let Some(operand) = receive_operand(node) {
+                let operand_text = node_text(source, operand).to_string();
+                push_replacement(
+                    out,
+                    source,
+                    node.start_byte(),
+                    node.end_byte(),
+                    "channel receive changed to send",
+                    &format!("{operand_text} <- 0"),
+                );
+            }
+        }
+        Operator::ChannelDirection if node.kind() == "unary_expression" => {
+            // A receive used as a value is a unary_expression. The enclosing
+            // receive_statement case above owns statement-form receives, so
+            // avoid emitting the same mutation twice for that representation.
+            let is_receive = node
+                .child_by_field_name("operator")
+                .is_some_and(|operator| node_text(source, operator) == "<-");
+            let wrapped_by_statement = node
+                .parent()
+                .is_some_and(|parent| parent.kind() == "receive_statement");
+            if is_receive && !wrapped_by_statement {
+                if let Some(operand) = node.child_by_field_name("operand") {
+                    let operand_text = node_text(source, operand).to_string();
+                    push_replacement(
+                        out,
+                        source,
+                        node.start_byte(),
+                        node.end_byte(),
+                        "channel receive changed to send",
+                        &format!("{operand_text} <- 0"),
+                    );
+                }
+            }
+        }
+        Operator::ChannelCloseRemoval if node.kind() == "expression_statement" => {
+            if let Some(call) = named_descendant_kind(node, "call_expression") {
+                if function_is(call, source, "close") && has_one_argument(call) {
+                    push_node_removal(out, source, node, "close call removed");
+                }
+            }
+        }
+        Operator::SelectCaseRemoval
+            if matches!(node.kind(), "communication_case" | "default_case")
+                && node
+                    .parent()
+                    .is_some_and(|parent| parent.kind() == "select_statement") =>
+        {
+            push_node_removal(out, source, node, "select case removed");
+        }
+        Operator::RangeBreak if node.kind() == "for_statement" => {
+            let is_range = named_child_kind(node, "range_clause").is_some();
+            if is_range {
+                if let Some(body) = node.child_by_field_name("body") {
+                    if let Some(list) = named_descendant_kind(body, "statement_list") {
+                        push_replacement(
+                            out,
+                            source,
+                            list.start_byte(),
+                            list.start_byte(),
+                            "break inserted in range loop",
+                            "break\n",
+                        );
+                    } else {
+                        // An empty block has no statement_list node. Insert
+                        // immediately after `{` and keep the mutation valid.
+                        let insertion = body.start_byte().saturating_add(1);
+                        push_replacement(
+                            out,
+                            source,
+                            insertion,
+                            insertion,
+                            "break inserted in range loop",
+                            "break\n",
+                        );
+                    }
+                }
+            }
+        }
+        Operator::MapIterationSwap if node.kind() == "range_clause" => {
+            if let Some(left) = node.child_by_field_name("left") {
+                let variables = named_children(left);
+                if variables.len() == 2 {
+                    // The source span from the first variable through the
+                    // second variable's start includes the comma and spaces.
+                    push_replacement(
+                        out,
+                        source,
+                        variables[0].start_byte(),
+                        variables[1].start_byte(),
+                        "range key removed",
+                        "",
+                    );
+                }
+            }
+        }
+        Operator::AppendRemoval if node.kind() == "assignment_statement" => {
+            if let Some(right) = node.child_by_field_name("right") {
+                if let Some(call) = named_descendant_kind(right, "call_expression") {
+                    if function_is(call, source, "append") {
+                        push_node_removal(out, source, node, "append assignment removed");
+                    }
+                }
+            }
+        }
+        Operator::SliceIndexSwap if node.kind() == "index_expression" => {
+            if let (Some(operand), Some(index)) = (
+                node.child_by_field_name("operand"),
+                node.child_by_field_name("index"),
+            ) {
+                let operand_text = node_text(source, operand);
+                let index_text = node_text(source, index);
+                push_replacement(
+                    out,
+                    source,
+                    index.start_byte(),
+                    index.end_byte(),
+                    "slice index reversed",
+                    &format!("len({operand_text})-1-{index_text}"),
+                );
+            }
+        }
+        Operator::RecoverRemoval if node.kind() == "call_expression" => {
+            let no_arguments = node
+                .child_by_field_name("arguments")
+                .is_none_or(|arguments| named_children(arguments).is_empty());
+            if no_arguments && function_is(node, source, "recover") {
+                push_replacement(
+                    out,
+                    source,
+                    node.start_byte(),
+                    node.end_byte(),
+                    "recover call replaced with nil",
+                    "nil",
+                );
+            }
+        }
+        _ => {}
+    }
+
+    let mut cursor = node.walk();
+    for child in node.named_children(&mut cursor) {
+        collect_idiomatic(child, source, op, out);
+    }
+}
+
+fn push_node_removal(
+    out: &mut Vec<Replacement>,
+    source: &str,
+    node: tree_sitter::Node<'_>,
+    label: &str,
+) {
+    push_replacement(out, source, node.start_byte(), node.end_byte(), label, "");
+}
+
+fn push_replacement(
+    out: &mut Vec<Replacement>,
+    source: &str,
+    start: usize,
+    end: usize,
+    label: &str,
+    text: &str,
+) {
+    if start <= end
+        && end <= source.len()
+        && source.is_char_boundary(start)
+        && source.is_char_boundary(end)
+        && source.get(start..end).is_some()
+        && source.get(start..end) != Some(text)
+    {
+        out.push(Replacement {
+            label: label.to_string(),
+            start,
+            end,
+            text: text.to_string(),
+        });
+    }
+}
+
+fn node_text<'a>(source: &'a str, node: tree_sitter::Node<'_>) -> &'a str {
+    source.get(node.start_byte()..node.end_byte()).unwrap_or("")
+}
+
+fn named_children(node: tree_sitter::Node<'_>) -> Vec<tree_sitter::Node<'_>> {
+    let mut cursor = node.walk();
+    node.named_children(&mut cursor).collect()
+}
+
+fn named_child_kind<'a>(node: tree_sitter::Node<'a>, kind: &str) -> Option<tree_sitter::Node<'a>> {
+    named_children(node)
+        .into_iter()
+        .find(|child| child.kind() == kind)
+}
+
+fn named_descendant_kind<'a>(
+    node: tree_sitter::Node<'a>,
+    kind: &str,
+) -> Option<tree_sitter::Node<'a>> {
+    if node.kind() == kind {
+        return Some(node);
+    }
+    let mut cursor = node.walk();
+    for child in node.named_children(&mut cursor) {
+        if let Some(found) = named_descendant_kind(child, kind) {
+            return Some(found);
+        }
+    }
+    None
+}
+
+fn function_is(call: tree_sitter::Node<'_>, source: &str, expected: &str) -> bool {
+    call.child_by_field_name("function")
+        .is_some_and(|function| {
+            function.kind() == "identifier" && node_text(source, function) == expected
+        })
+}
+
+fn has_one_argument(call: tree_sitter::Node<'_>) -> bool {
+    call.child_by_field_name("arguments")
+        .is_some_and(|arguments| named_children(arguments).len() == 1)
+}
+
+fn receive_operand(node: tree_sitter::Node<'_>) -> Option<tree_sitter::Node<'_>> {
+    node.child_by_field_name("right")
+        .and_then(|right| named_descendant_kind(right, "unary_expression"))
+        .and_then(|unary| unary.child_by_field_name("operand"))
+        .or_else(|| node.child_by_field_name("operand"))
+}
+
+fn is_error_guard(node: tree_sitter::Node<'_>, source: &str) -> bool {
+    let Some(condition) = node.child_by_field_name("condition") else {
+        return false;
+    };
+    let is_non_nil = condition
+        .child_by_field_name("operator")
+        .is_some_and(|operator| node_text(source, operator) == "!=")
+        && condition
+            .child_by_field_name("right")
+            .is_some_and(|right| node_text(source, right) == "nil");
+    if !is_non_nil {
+        return false;
+    }
+    node.child_by_field_name("consequence")
+        .is_some_and(|consequence| has_error_exit(consequence, source))
+}
+
+fn has_error_exit(node: tree_sitter::Node<'_>, source: &str) -> bool {
+    if matches!(
+        node.kind(),
+        "return_statement" | "break_statement" | "continue_statement"
+    ) {
+        return true;
+    }
+    if node.kind() == "call_expression" && function_is(node, source, "panic") {
+        return true;
+    }
+    let mut cursor = node.walk();
+    let found = node
+        .named_children(&mut cursor)
+        .any(|child| has_error_exit(child, source));
+    found
+}
+
 fn single_char_binary_op(source: &str, i: usize) -> Option<char> {
     let b = source.as_bytes();
     let c = b[i] as char;
@@ -120,6 +551,41 @@ fn single_char_binary_op(source: &str, i: usize) -> Option<char> {
     // inc/dec token, not a binary operator.
     if matches!(c, '+' | '-') && i > 0 && matches!(b[i - 1] as char, '+' | '-') {
         return None;
+    }
+    // A leading sign is unary, not an arithmetic binary operator. This also
+    // excludes the receive half of the channel operator (`<-ch`).
+    if matches!(c, '+' | '-') {
+        let mut left = i;
+        while left > 0 && (b[left - 1] as char).is_ascii_whitespace() {
+            left -= 1;
+        }
+        let binary_left = if left == 0 {
+            false
+        } else {
+            let previous = b[left - 1] as char;
+            if matches!(previous, '_' | ')' | ']' | '}') {
+                true
+            } else if previous.is_ascii_alphanumeric() {
+                let mut word_start = left - 1;
+                while word_start > 0 {
+                    let ch = b[word_start - 1] as char;
+                    if ch.is_ascii_alphanumeric() || ch == '_' {
+                        word_start -= 1;
+                    } else {
+                        break;
+                    }
+                }
+                !matches!(
+                    &source[word_start..left],
+                    "return" | "case" | "go" | "defer"
+                )
+            } else {
+                false
+            }
+        };
+        if !binary_left {
+            return None;
+        }
     }
     // Skip compound / multi-char ops: next char is one of = < > & | - * etc.
     if let Some(&n) = b.get(i + 1) {
@@ -654,6 +1120,15 @@ fn inc_replacements(source: &str) -> Vec<Replacement> {
 mod tests {
     use super::*;
 
+    fn apply(src: &str, replacement: &Replacement) -> String {
+        format!(
+            "{}{}{}",
+            &src[..replacement.start],
+            replacement.text,
+            &src[replacement.end..]
+        )
+    }
+
     #[test]
     fn aor_swaps_arith_ops() {
         let src = "x := a + b - c * d / e % f;";
@@ -667,6 +1142,9 @@ mod tests {
         // Skip compound assignments: += must not match.
         let src2 = "x += 1;";
         assert!(replacements_for(Operator::Aor, src2).is_empty());
+        // Unary signs and channel receives are not binary arithmetic.
+        assert!(replacements_for(Operator::Aor, "return <-ch").is_empty());
+        assert!(replacements_for(Operator::Aor, "return -x").is_empty());
     }
 
     #[test]
@@ -804,6 +1282,163 @@ mod tests {
             );
         }
         assert_eq!(Operator::from_name("nope"), None);
+    }
+
+    #[test]
+    fn idiomatic_defer_removal_has_exact_pair() {
+        let src = "package p\nfunc f() {\n\tdefer cleanup()\n\twork()\n}\n";
+        let reps = replacements_for(Operator::DeferRemoval, src);
+        assert_eq!(reps.len(), 1);
+        assert_eq!(
+            apply(src, &reps[0]),
+            "package p\nfunc f() {\n\t\n\twork()\n}\n"
+        );
+    }
+
+    #[test]
+    fn idiomatic_goroutine_removal_has_exact_pair() {
+        let src = "package p\nfunc f(ch chan int) {\n\tgo work(ch)\n}\n";
+        let reps = replacements_for(Operator::GoroutineRemoval, src);
+        assert_eq!(reps.len(), 1);
+        assert_eq!(
+            apply(src, &reps[0]),
+            "package p\nfunc f(ch chan int) {\n\t work(ch)\n}\n"
+        );
+    }
+
+    #[test]
+    fn idiomatic_error_check_removal_has_exact_pair() {
+        let src = "package p\nfunc f(err error) int {\n\tif err != nil {\n\t\treturn 1\n\t}\n\treturn 0\n}\n";
+        let reps = replacements_for(Operator::ErrCheckRemoval, src);
+        assert_eq!(reps.len(), 1);
+        assert_eq!(
+            apply(src, &reps[0]),
+            "package p\nfunc f(err error) int {\n\t\n\treturn 0\n}\n"
+        );
+
+        // The initializer form has the same condition node after parsing;
+        // retain it as a regression test for `if err := f(); err != nil`.
+        let initialized = "package p\nfunc f() int {\n\tif err := work(); err != nil {\n\t\treturn 1\n\t}\n\treturn 0\n}\n";
+        let initialized_reps = replacements_for(Operator::ErrCheckRemoval, initialized);
+        assert_eq!(initialized_reps.len(), 1);
+        assert_eq!(
+            apply(initialized, &initialized_reps[0]),
+            "package p\nfunc f() int {\n\t\n\treturn 0\n}\n"
+        );
+    }
+
+    #[test]
+    fn idiomatic_error_return_swap_has_exact_pair() {
+        let src = "package p\nfunc f() (int, int) { return 1, 2 }\n";
+        let reps = replacements_for(Operator::ErrReturnSwap, src);
+        assert_eq!(reps.len(), 1);
+        assert_eq!(
+            apply(src, &reps[0]),
+            "package p\nfunc f() (int, int) { return 2, 1 }\n"
+        );
+    }
+
+    #[test]
+    fn idiomatic_channel_direction_has_exact_pair() {
+        let src =
+            "package p\nfunc send(ch chan int) { ch <- 1 }\nfunc recv(ch chan int) { <-ch }\n";
+        let reps = replacements_for(Operator::ChannelDirection, src);
+        assert_eq!(reps.len(), 2);
+        let send = reps.iter().find(|r| &src[r.start..r.end] == "ch <- 1");
+        let recv = reps.iter().find(|r| &src[r.start..r.end] == "<-ch");
+        assert!(send.is_some(), "send replacement missing: {reps:?}");
+        assert!(recv.is_some(), "receive replacement missing: {reps:?}");
+        assert_eq!(
+            apply(src, send.unwrap()),
+            "package p\nfunc send(ch chan int) { <-ch }\nfunc recv(ch chan int) { <-ch }\n"
+        );
+        assert_eq!(
+            apply(src, recv.unwrap()),
+            "package p\nfunc send(ch chan int) { ch <- 1 }\nfunc recv(ch chan int) { ch <- 0 }\n"
+        );
+    }
+
+    #[test]
+    fn idiomatic_channel_close_removal_has_exact_pair() {
+        let src = "package p\nfunc f(ch chan int) {\n\tclose(ch)\n}\n";
+        let reps = replacements_for(Operator::ChannelCloseRemoval, src);
+        assert_eq!(reps.len(), 1);
+        assert_eq!(
+            apply(src, &reps[0]),
+            "package p\nfunc f(ch chan int) {\n\t\n}\n"
+        );
+        assert!(replacements_for(Operator::ChannelCloseRemoval, "close()").is_empty());
+        assert!(replacements_for(Operator::ChannelCloseRemoval, "close(a, b)").is_empty());
+    }
+
+    #[test]
+    fn idiomatic_select_case_removal_has_exact_pair() {
+        let src = "package p\nfunc f(ch chan int) {\n\tselect {\n\tcase <-ch:\n\t\twork()\n\tdefault:\n\t\tother()\n\t}\n}\n";
+        let reps = replacements_for(Operator::SelectCaseRemoval, src);
+        assert_eq!(reps.len(), 2);
+        assert_eq!(
+            apply(src, &reps[0]),
+            "package p\nfunc f(ch chan int) {\n\tselect {\n\t\tdefault:\n\t\tother()\n\t}\n}\n"
+        );
+        assert_eq!(
+            apply(src, &reps[1]),
+            "package p\nfunc f(ch chan int) {\n\tselect {\n\tcase <-ch:\n\t\twork()\n\t\t}\n}\n"
+        );
+    }
+
+    #[test]
+    fn idiomatic_range_break_has_exact_pair() {
+        let src = "package p\nfunc f(xs []int) {\n\tfor _, x := range xs {\n\t\twork(x)\n\t}\n}\n";
+        let reps = replacements_for(Operator::RangeBreak, src);
+        assert_eq!(reps.len(), 1);
+        assert_eq!(
+            apply(src, &reps[0]),
+            "package p\nfunc f(xs []int) {\n\tfor _, x := range xs {\n\t\tbreak\nwork(x)\n\t}\n}\n"
+        );
+    }
+
+    #[test]
+    fn idiomatic_map_iteration_swap_has_exact_pair() {
+        let src = "package p\nfunc f(m map[string]int) {\n\tfor k, v := range m {\n\t\tuse(k, v)\n\t}\n}\n";
+        let reps = replacements_for(Operator::MapIterationSwap, src);
+        assert_eq!(reps.len(), 1);
+        assert_eq!(
+            apply(src, &reps[0]),
+            "package p\nfunc f(m map[string]int) {\n\tfor v := range m {\n\t\tuse(k, v)\n\t}\n}\n"
+        );
+    }
+
+    #[test]
+    fn idiomatic_append_removal_has_exact_pair() {
+        let src = "package p\nfunc f(s []int) {\n\ts = append(s, 1)\n}\n";
+        let reps = replacements_for(Operator::AppendRemoval, src);
+        assert_eq!(reps.len(), 1);
+        assert_eq!(
+            apply(src, &reps[0]),
+            "package p\nfunc f(s []int) {\n\t\n}\n"
+        );
+    }
+
+    #[test]
+    fn idiomatic_slice_index_swap_has_exact_pair() {
+        let src = "package p\nfunc f(s []int, i int) int { return s[i] }\n";
+        let reps = replacements_for(Operator::SliceIndexSwap, src);
+        assert_eq!(reps.len(), 1);
+        assert_eq!(
+            apply(src, &reps[0]),
+            "package p\nfunc f(s []int, i int) int { return s[len(s)-1-i] }\n"
+        );
+    }
+
+    #[test]
+    fn idiomatic_recover_removal_has_exact_pair() {
+        let src = "package p\nfunc f() {\n\tvar r any\n\tr = recover()\n\t_ = r\n}\n";
+        let reps = replacements_for(Operator::RecoverRemoval, src);
+        assert_eq!(reps.len(), 1);
+        assert_eq!(
+            apply(src, &reps[0]),
+            "package p\nfunc f() {\n\tvar r any\n\tr = nil\n\t_ = r\n}\n"
+        );
     }
 
     #[test]

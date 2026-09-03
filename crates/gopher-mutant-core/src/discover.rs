@@ -51,8 +51,8 @@ fn is_go_source(name: &str) -> bool {
 }
 
 /// Walk `module_root` and discover mutation points for `operators`
-/// (default: all 10 generic). Skips test files, vendored/generated code,
-/// and `main.go` (no tests exercise main).
+/// (default: all 21 operator classes). Skips test files, vendored/generated
+/// code, and `main.go` (no tests exercise main).
 pub fn discover(module_root: &Path, operators: &[Operator]) -> Result<Discovery> {
     let mut files = Vec::new();
     let mut total = 0usize;
@@ -76,13 +76,15 @@ pub fn discover(module_root: &Path, operators: &[Operator]) -> Result<Discovery>
             .replace('\\', "/");
         let source = std::fs::read_to_string(&abs)
             .with_context(|| format!("failed to read {}", abs.display()))?;
-        // Scan the masked text (comments/strings blanked) so operators only
-        // fire on real code; byte offsets are identical to the original.
+        // Generic scanners run over masked text; Go-idiomatic operators use
+        // tree-sitter against the real source because their ranges are whole
+        // statements/expressions rather than token matches.
         let masked = crate::parse::mask_non_code(&source);
 
         let mut points = Vec::new();
         for op in operators {
-            for rep in replacements_for(*op, &masked) {
+            let scan_source = if op.is_idiomatic() { &source } else { &masked };
+            for rep in replacements_for(*op, scan_source) {
                 let (line, column) = line_col(&source, rep.start);
                 points.push(MutationPoint {
                     file: rel.clone(),
