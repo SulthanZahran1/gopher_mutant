@@ -1,6 +1,6 @@
 # GOAL 0.3.0 — gopher_mutant: M3 speed
 
-> **Status:** draft (proposed 2026-08-04). Locking is a human act — see Human check.
+> **Status:** 🔒 **locked** (locked 2026-09-03 by human — criteria frozen; changes require human renegotiation).
 > **Prerequisite:** GOAL-2.md (M2 operators + fixtures) signed-off.
 > **Scope decided in wayfinder ticket #6:** per-test coverage routing, adaptive timeouts, parallel scheduler, content-addressed cache, incremental mode, `--mutant N`. TCE is NOT in this milestone (folded into M4 — it's opt-in and only touches surviving mutants, which need M3's speed to exist at scale).
 
