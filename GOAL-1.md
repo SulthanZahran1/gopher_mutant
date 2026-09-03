@@ -1,6 +1,7 @@
 # GOAL 0.1.0 — gopher_mutant: M1 engine skeleton
 
-> **Status:** 🔒 **locked** (locked 2026-08-04 by human — criteria frozen; changes require human renegotiation).
+> **Status:** ✅ **signed-off** (signed off 2026-09-03 by human after the M1 receipt review; criteria frozen — changes require human renegotiation). See Human check.
+> **Sign-off note (2026-09-03):** the <5s small-fixture wall-clock criterion was renegotiated at demo time per the milestone failure mechanics — measured floor is ~10.5s on the 2-core dev box (per-mutant `go test -overlay` recompile, serialized on Go's build-cache lock). The integration test asserts a 30s regression bound; the <5s number is deferred to M3's pre-built test binary (`go test -c`), which is the locked fix. All other criteria verified: 5/5 integration tests green, 100% MSI on small fixture, source tree hash-verified untouched, exit codes 0/1/2/3 correct.
 > **Prerequisite:** none — first milestone.
 > **Scope decided in wayfinder ticket #6:** M1 is the engine skeleton only — parse, discover, overlay patch, run, classify, console report. No idiomatic operators yet (M2), no speed features (M3), no TCE/reports/distribution (M4).
 

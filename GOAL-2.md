@@ -1,6 +1,6 @@
 # GOAL 0.2.0 — gopher_mutant: M2 operators + fixtures
 
-> **Status:** draft (proposed 2026-08-04). Locking is a human act — see Human check.
+> **Status:** 🔒 **locked** (locked 2026-09-03 by human — criteria frozen; changes require human renegotiation).
 > **Prerequisite:** GOAL-1.md (M1 engine skeleton) signed-off.
 > **Scope decided in wayfinder ticket #6 + #7:** all 22 operators (12 Go-idiomatic + 10 generic), small/medium/large fixture suite per the fixture sizing contract, compile-error rate <2%.
 
