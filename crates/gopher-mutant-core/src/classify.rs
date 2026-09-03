@@ -29,11 +29,25 @@ impl Outcome {
             Outcome::Timeout => "timeout",
         }
     }
+
+    /// Parse an outcome string (cache round-trip).
+    #[allow(clippy::should_implement_trait)] // inherent parse, not FromStr
+    pub fn from_str(s: &str) -> Option<Outcome> {
+        match s {
+            "killed" => Some(Outcome::Killed),
+            "survived" => Some(Outcome::Survived),
+            "not_covered" => Some(Outcome::NotCovered),
+            "compile_error" => Some(Outcome::CompileError),
+            "timeout" => Some(Outcome::Timeout),
+            _ => None,
+        }
+    }
 }
 
 /// Classification of one mutant run.
 #[derive(Debug, Clone, Serialize)]
 pub struct Classification {
+    /// Global 1-based mutant id in discovery order (stable across runs).
     pub id: usize,
     pub file: String,
     pub line: usize,
@@ -41,10 +55,47 @@ pub struct Classification {
     pub operator: String,
     pub label: String,
     pub outcome: Outcome,
-    /// Wall-clock ms of the test run (0 for compile_error).
+    /// Wall-clock ms of the test run (0 for compile_error and cache hits).
     pub duration_ms: u128,
     /// Whether the mutant was covered by the suite's coverage profile.
     pub covered: bool,
+    /// Tests executed for this mutant (routed runs; `full-suite` otherwise).
+    #[serde(default)]
+    pub tests_run: Vec<String>,
+    /// True when the outcome came from the content-addressed cache.
+    #[serde(default)]
+    pub cached: bool,
+    /// `original → replacement` patch, present only in `--mutant N` mode.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub patch: Option<String>,
+}
+
+/// Routing info for the report.
+#[derive(Debug, Clone, Serialize)]
+pub struct RoutingInfo {
+    pub enabled: bool,
+    pub backend: String,
+    pub tests_discovered: usize,
+    pub mapped: usize,
+}
+
+/// Resource accounting for the report.
+#[derive(Debug, Clone, Serialize)]
+pub struct Resources {
+    pub requested_workers: usize,
+    pub effective_workers: usize,
+    pub global_cpu_budget: usize,
+    pub wait_ms: u128,
+    pub throttled: bool,
+}
+
+/// Timing breakdown for the report.
+#[derive(Debug, Clone, Serialize)]
+pub struct Timing {
+    pub routing_ms: u128,
+    pub execution_ms: u128,
+    pub cache_ms: u128,
+    pub total_ms: u128,
 }
 
 /// Aggregated run report.
@@ -64,6 +115,14 @@ pub struct Report {
     /// Non-zero when MSI < threshold (exit code 1).
     pub below_threshold: bool,
     pub threshold: f64,
+    #[serde(default)]
+    pub routing: RoutingInfo,
+    #[serde(default)]
+    pub resources: Resources,
+    #[serde(default)]
+    pub timing: Timing,
+    #[serde(default)]
+    pub cache_hits: usize,
 }
 
 impl Report {
@@ -102,6 +161,26 @@ impl Report {
             classifications,
             below_threshold,
             threshold,
+            routing: RoutingInfo {
+                enabled: false,
+                backend: "disabled".into(),
+                tests_discovered: 0,
+                mapped: 0,
+            },
+            resources: Resources {
+                requested_workers: 1,
+                effective_workers: 1,
+                global_cpu_budget: 1,
+                wait_ms: 0,
+                throttled: false,
+            },
+            timing: Timing {
+                routing_ms: 0,
+                execution_ms: 0,
+                cache_ms: 0,
+                total_ms: elapsed_ms,
+            },
+            cache_hits: 0,
         }
     }
 }
@@ -121,18 +200,21 @@ mod tests {
             outcome,
             duration_ms: 1,
             covered: true,
+            tests_run: Vec::new(),
+            cached: false,
+            patch: None,
         }
     }
 
     #[test]
     fn report_sums_buckets() {
         let cs = vec![
-            cls(0, Outcome::Killed),
             cls(1, Outcome::Killed),
-            cls(2, Outcome::Survived),
-            cls(3, Outcome::NotCovered),
-            cls(4, Outcome::CompileError),
-            cls(5, Outcome::Timeout),
+            cls(2, Outcome::Killed),
+            cls(3, Outcome::Survived),
+            cls(4, Outcome::NotCovered),
+            cls(5, Outcome::CompileError),
+            cls(6, Outcome::Timeout),
         ];
         let r = Report::new(cs, 100, 80.0);
         assert_eq!(r.total, 6);
@@ -148,7 +230,7 @@ mod tests {
 
     #[test]
     fn report_full_kill_passes_threshold() {
-        let cs = vec![cls(0, Outcome::Killed), cls(1, Outcome::Killed)];
+        let cs = vec![cls(1, Outcome::Killed), cls(2, Outcome::Killed)];
         let r = Report::new(cs, 10, 80.0);
         assert_eq!(r.mutation_score, 100.0);
         assert!(!r.below_threshold);
@@ -161,5 +243,7 @@ mod tests {
         assert_eq!(Outcome::NotCovered.as_str(), "not_covered");
         assert_eq!(Outcome::CompileError.as_str(), "compile_error");
         assert_eq!(Outcome::Timeout.as_str(), "timeout");
+        assert_eq!(Outcome::from_str("killed"), Some(Outcome::Killed));
+        assert_eq!(Outcome::from_str("nope"), None);
     }
 }

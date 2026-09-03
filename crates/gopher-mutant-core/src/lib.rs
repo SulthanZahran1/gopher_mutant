@@ -7,11 +7,14 @@
 //! M1 scope (GOAL-1): the 10 generic operator classes shared with dart_mutant.
 //! The 12 Go-idiomatic operators land in M2.
 
+pub mod cache;
 pub mod classify;
 pub mod discover;
 pub mod mutate;
 pub mod operators;
 pub mod parse;
+pub mod resources;
+pub mod routing;
 pub mod runner;
 
 pub use classify::{Classification, Outcome};

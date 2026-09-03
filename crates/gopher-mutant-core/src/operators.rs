@@ -553,8 +553,23 @@ fn single_char_binary_op(source: &str, i: usize) -> Option<char> {
         return None;
     }
     // A leading sign is unary, not an arithmetic binary operator. This also
-    // excludes the receive half of the channel operator (`<-ch`).
-    if matches!(c, '+' | '-') {
+    // excludes the receive half of the channel operator (`<-ch`). `*` needs
+    // two guards: (1) the left-side check below (previous char is `(`, `=`,
+    // space, or start → unary deref/pointer), and (2) a right-side check —
+    // gofmt always spaces binary operators, so `*` immediately followed by
+    // an identifier char is a pointer type (`*T`) or deref (`*p`), never
+    // multiplication.
+    if matches!(c, '+' | '-' | '*') {
+        if c == '*' {
+            // Pointer types/derefs have a letter or `_` right after the
+            // star (`*T`, `*p`, `*uuid`); multiplication with a literal
+            // (`(x)*10000`, `x*2`) has a digit — keep those.
+            if let Some(&n) = b.get(i + 1) {
+                if (n as char).is_ascii_alphabetic() || n == b'_' {
+                    return None;
+                }
+            }
+        }
         let mut left = i;
         while left > 0 && (b[left - 1] as char).is_ascii_whitespace() {
             left -= 1;

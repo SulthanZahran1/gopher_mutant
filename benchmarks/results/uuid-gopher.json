@@ -1,0 +1,1570 @@
+{
+  "schema_version": 1,
+  "tool": "gopher_mutant",
+  "go_toolchain": "go version go1.26.2 linux/amd64",
+  "module_path": "/tmp/gm-bench/uuid",
+  "report": {
+    "total": 102,
+    "killed": 80,
+    "survived": 12,
+    "not_covered": 6,
+    "compile_error": 0,
+    "timeout": 4,
+    "mutation_score": 81.63265306122449,
+    "elapsed_ms": 67915,
+    "classifications": [
+      {
+        "id": 1,
+        "file": "sql.go",
+        "line": 22,
+        "column": 10,
+        "operator": "ROR",
+        "label": "== → !=",
+        "outcome": "killed",
+        "duration_ms": 552,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 2,
+        "file": "sql.go",
+        "line": 28,
+        "column": 10,
+        "operator": "ROR",
+        "label": "!= → ==",
+        "outcome": "killed",
+        "duration_ms": 760,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 3,
+        "file": "sql.go",
+        "line": 36,
+        "column": 15,
+        "operator": "ROR",
+        "label": "== → !=",
+        "outcome": "killed",
+        "duration_ms": 721,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 4,
+        "file": "sql.go",
+        "line": 42,
+        "column": 15,
+        "operator": "ROR",
+        "label": "!= → ==",
+        "outcome": "killed",
+        "duration_ms": 501,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 5,
+        "file": "null.go",
+        "line": 36,
+        "column": 11,
+        "operator": "ROR",
+        "label": "== → !=",
+        "outcome": "survived",
+        "duration_ms": 3049,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 6,
+        "file": "null.go",
+        "line": 42,
+        "column": 9,
+        "operator": "ROR",
+        "label": "!= → ==",
+        "outcome": "survived",
+        "duration_ms": 3122,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 7,
+        "file": "null.go",
+        "line": 71,
+        "column": 15,
+        "operator": "ROR",
+        "label": "!= → ==",
+        "outcome": "not_covered",
+        "duration_ms": 3803,
+        "covered": false,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 8,
+        "file": "null.go",
+        "line": 91,
+        "column": 9,
+        "operator": "ROR",
+        "label": "!= → ==",
+        "outcome": "not_covered",
+        "duration_ms": 3946,
+        "covered": false,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 9,
+        "file": "null.go",
+        "line": 116,
+        "column": 17,
+        "operator": "ROR",
+        "label": "== → !=",
+        "outcome": "killed",
+        "duration_ms": 753,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 10,
+        "file": "version1.go",
+        "line": 22,
+        "column": 9,
+        "operator": "ROR",
+        "label": "!= → ==",
+        "outcome": "killed",
+        "duration_ms": 1077,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 11,
+        "file": "version1.go",
+        "line": 37,
+        "column": 12,
+        "operator": "ROR",
+        "label": "== → !=",
+        "outcome": "timeout",
+        "duration_ms": 6279,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 12,
+        "file": "node_net.go",
+        "line": 20,
+        "column": 16,
+        "operator": "ROR",
+        "label": "== → !=",
+        "outcome": "survived",
+        "duration_ms": 4797,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 13,
+        "file": "node_net.go",
+        "line": 23,
+        "column": 10,
+        "operator": "ROR",
+        "label": "!= → ==",
+        "outcome": "survived",
+        "duration_ms": 3064,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 14,
+        "file": "node_net.go",
+        "line": 28,
+        "column": 28,
+        "operator": "ROR",
+        "label": ">= → >",
+        "outcome": "survived",
+        "duration_ms": 2579,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 15,
+        "file": "node_net.go",
+        "line": 28,
+        "column": 42,
+        "operator": "ROR",
+        "label": "== → !=",
+        "outcome": "killed",
+        "duration_ms": 505,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 16,
+        "file": "node_net.go",
+        "line": 28,
+        "column": 56,
+        "operator": "ROR",
+        "label": "== → !=",
+        "outcome": "killed",
+        "duration_ms": 604,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 17,
+        "file": "version7.go",
+        "line": 93,
+        "column": 15,
+        "operator": "AOR",
+        "label": "/ → *",
+        "outcome": "survived",
+        "duration_ms": 2543,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 18,
+        "file": "version7.go",
+        "line": 95,
+        "column": 14,
+        "operator": "AOR",
+        "label": "- → +",
+        "outcome": "killed",
+        "duration_ms": 752,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 19,
+        "file": "version7.go",
+        "line": 96,
+        "column": 19,
+        "operator": "AOR",
+        "label": "+ → -",
+        "outcome": "killed",
+        "duration_ms": 451,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 20,
+        "file": "version7.go",
+        "line": 98,
+        "column": 20,
+        "operator": "AOR",
+        "label": "+ → -",
+        "outcome": "killed",
+        "duration_ms": 552,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 21,
+        "file": "version7.go",
+        "line": 25,
+        "column": 9,
+        "operator": "ROR",
+        "label": "!= → ==",
+        "outcome": "killed",
+        "duration_ms": 618,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 22,
+        "file": "version7.go",
+        "line": 37,
+        "column": 9,
+        "operator": "ROR",
+        "label": "!= → ==",
+        "outcome": "killed",
+        "duration_ms": 760,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 23,
+        "file": "version7.go",
+        "line": 97,
+        "column": 9,
+        "operator": "ROR",
+        "label": "<= → <",
+        "outcome": "survived",
+        "duration_ms": 2928,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 24,
+        "file": "time.go",
+        "line": 20,
+        "column": 20,
+        "operator": "AOR",
+        "label": "- → +",
+        "outcome": "killed",
+        "duration_ms": 604,
+        "covered": false,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 25,
+        "file": "time.go",
+        "line": 21,
+        "column": 21,
+        "operator": "AOR",
+        "label": "* → /",
+        "outcome": "killed",
+        "duration_ms": 662,
+        "covered": false,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 26,
+        "file": "time.go",
+        "line": 22,
+        "column": 21,
+        "operator": "AOR",
+        "label": "* → /",
+        "outcome": "killed",
+        "duration_ms": 608,
+        "covered": false,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 27,
+        "file": "time.go",
+        "line": 36,
+        "column": 16,
+        "operator": "AOR",
+        "label": "- → +",
+        "outcome": "killed",
+        "duration_ms": 614,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 28,
+        "file": "time.go",
+        "line": 37,
+        "column": 14,
+        "operator": "AOR",
+        "label": "% → *",
+        "outcome": "killed",
+        "duration_ms": 657,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 29,
+        "file": "time.go",
+        "line": 37,
+        "column": 26,
+        "operator": "AOR",
+        "label": "* → /",
+        "outcome": "killed",
+        "duration_ms": 653,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 30,
+        "file": "time.go",
+        "line": 63,
+        "column": 28,
+        "operator": "AOR",
+        "label": "/ → *",
+        "outcome": "killed",
+        "duration_ms": 554,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 31,
+        "file": "time.go",
+        "line": 63,
+        "column": 34,
+        "operator": "AOR",
+        "label": "+ → -",
+        "outcome": "killed",
+        "duration_ms": 502,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 32,
+        "file": "time.go",
+        "line": 68,
+        "column": 25,
+        "operator": "AOR",
+        "label": "+ → -",
+        "outcome": "survived",
+        "duration_ms": 2565,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 33,
+        "file": "time.go",
+        "line": 127,
+        "column": 22,
+        "operator": "AOR",
+        "label": "* → /",
+        "outcome": "not_covered",
+        "duration_ms": 2512,
+        "covered": false,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 34,
+        "file": "time.go",
+        "line": 127,
+        "column": 29,
+        "operator": "AOR",
+        "label": "+ → -",
+        "outcome": "not_covered",
+        "duration_ms": 2670,
+        "covered": false,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 35,
+        "file": "time.go",
+        "line": 53,
+        "column": 16,
+        "operator": "ROR",
+        "label": "== → !=",
+        "outcome": "killed",
+        "duration_ms": 451,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 36,
+        "file": "time.go",
+        "line": 60,
+        "column": 14,
+        "operator": "ROR",
+        "label": "== → !=",
+        "outcome": "killed",
+        "duration_ms": 757,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 37,
+        "file": "time.go",
+        "line": 67,
+        "column": 9,
+        "operator": "ROR",
+        "label": "<= → <",
+        "outcome": "killed",
+        "duration_ms": 656,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 38,
+        "file": "time.go",
+        "line": 88,
+        "column": 14,
+        "operator": "ROR",
+        "label": "== → !=",
+        "outcome": "not_covered",
+        "duration_ms": 2625,
+        "covered": false,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 39,
+        "file": "time.go",
+        "line": 103,
+        "column": 9,
+        "operator": "ROR",
+        "label": "== → !=",
+        "outcome": "killed",
+        "duration_ms": 556,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 40,
+        "file": "time.go",
+        "line": 110,
+        "column": 12,
+        "operator": "ROR",
+        "label": "!= → ==",
+        "outcome": "survived",
+        "duration_ms": 2877,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 41,
+        "file": "version6.go",
+        "line": 26,
+        "column": 9,
+        "operator": "ROR",
+        "label": "!= → ==",
+        "outcome": "killed",
+        "duration_ms": 501,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 42,
+        "file": "version6.go",
+        "line": 41,
+        "column": 9,
+        "operator": "ROR",
+        "label": "!= → ==",
+        "outcome": "killed",
+        "duration_ms": 551,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 43,
+        "file": "version6.go",
+        "line": 76,
+        "column": 12,
+        "operator": "ROR",
+        "label": "== → !=",
+        "outcome": "survived",
+        "duration_ms": 2469,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 44,
+        "file": "marshal.go",
+        "line": 19,
+        "column": 9,
+        "operator": "ROR",
+        "label": "!= → ==",
+        "outcome": "killed",
+        "duration_ms": 661,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 45,
+        "file": "marshal.go",
+        "line": 33,
+        "column": 15,
+        "operator": "ROR",
+        "label": "!= → ==",
+        "outcome": "killed",
+        "duration_ms": 553,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 46,
+        "file": "version4.go",
+        "line": 69,
+        "column": 37,
+        "operator": "AOR",
+        "label": "+ → -",
+        "outcome": "timeout",
+        "duration_ms": 6287,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 47,
+        "file": "version4.go",
+        "line": 50,
+        "column": 9,
+        "operator": "ROR",
+        "label": "!= → ==",
+        "outcome": "killed",
+        "duration_ms": 667,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 48,
+        "file": "version4.go",
+        "line": 61,
+        "column": 13,
+        "operator": "ROR",
+        "label": "== → !=",
+        "outcome": "timeout",
+        "duration_ms": 6239,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 49,
+        "file": "version4.go",
+        "line": 63,
+        "column": 10,
+        "operator": "ROR",
+        "label": "!= → ==",
+        "outcome": "killed",
+        "duration_ms": 452,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 50,
+        "file": "uuid.go",
+        "line": 42,
+        "column": 25,
+        "operator": "AOR",
+        "label": "* → /",
+        "outcome": "timeout",
+        "duration_ms": 6242,
+        "covered": false,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 51,
+        "file": "uuid.go",
+        "line": 102,
+        "column": 10,
+        "operator": "AOR",
+        "label": "+ → -",
+        "outcome": "killed",
+        "duration_ms": 512,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 52,
+        "file": "uuid.go",
+        "line": 109,
+        "column": 10,
+        "operator": "AOR",
+        "label": "+ → -",
+        "outcome": "killed",
+        "duration_ms": 553,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 53,
+        "file": "uuid.go",
+        "line": 116,
+        "column": 26,
+        "operator": "AOR",
+        "label": "* → /",
+        "outcome": "killed",
+        "duration_ms": 810,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 54,
+        "file": "uuid.go",
+        "line": 116,
+        "column": 34,
+        "operator": "AOR",
+        "label": "* → /",
+        "outcome": "killed",
+        "duration_ms": 771,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 55,
+        "file": "uuid.go",
+        "line": 116,
+        "column": 36,
+        "operator": "AOR",
+        "label": "+ → -",
+        "outcome": "killed",
+        "duration_ms": 454,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 56,
+        "file": "uuid.go",
+        "line": 138,
+        "column": 26,
+        "operator": "AOR",
+        "label": "+ → -",
+        "outcome": "killed",
+        "duration_ms": 556,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 57,
+        "file": "uuid.go",
+        "line": 152,
+        "column": 10,
+        "operator": "AOR",
+        "label": "+ → -",
+        "outcome": "killed",
+        "duration_ms": 502,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 58,
+        "file": "uuid.go",
+        "line": 157,
+        "column": 10,
+        "operator": "AOR",
+        "label": "+ → -",
+        "outcome": "killed",
+        "duration_ms": 551,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 59,
+        "file": "uuid.go",
+        "line": 162,
+        "column": 10,
+        "operator": "AOR",
+        "label": "/ → *",
+        "outcome": "killed",
+        "duration_ms": 403,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 60,
+        "file": "uuid.go",
+        "line": 162,
+        "column": 34,
+        "operator": "AOR",
+        "label": "+ → -",
+        "outcome": "killed",
+        "duration_ms": 761,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 61,
+        "file": "uuid.go",
+        "line": 183,
+        "column": 26,
+        "operator": "AOR",
+        "label": "+ → -",
+        "outcome": "killed",
+        "duration_ms": 607,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 62,
+        "file": "uuid.go",
+        "line": 197,
+        "column": 28,
+        "operator": "AOR",
+        "label": "+ → -",
+        "outcome": "killed",
+        "duration_ms": 302,
+        "covered": false,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 63,
+        "file": "uuid.go",
+        "line": 229,
+        "column": 10,
+        "operator": "AOR",
+        "label": "+ → -",
+        "outcome": "killed",
+        "duration_ms": 605,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 64,
+        "file": "uuid.go",
+        "line": 236,
+        "column": 10,
+        "operator": "AOR",
+        "label": "+ → -",
+        "outcome": "killed",
+        "duration_ms": 674,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 65,
+        "file": "uuid.go",
+        "line": 237,
+        "column": 29,
+        "operator": "AOR",
+        "label": "- → +",
+        "outcome": "killed",
+        "duration_ms": 813,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 66,
+        "file": "uuid.go",
+        "line": 240,
+        "column": 19,
+        "operator": "AOR",
+        "label": "- → +",
+        "outcome": "killed",
+        "duration_ms": 559,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 67,
+        "file": "uuid.go",
+        "line": 245,
+        "column": 27,
+        "operator": "AOR",
+        "label": "+ → -",
+        "outcome": "killed",
+        "duration_ms": 756,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 68,
+        "file": "uuid.go",
+        "line": 261,
+        "column": 30,
+        "operator": "AOR",
+        "label": "+ → -",
+        "outcome": "killed",
+        "duration_ms": 709,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 69,
+        "file": "uuid.go",
+        "line": 281,
+        "column": 14,
+        "operator": "AOR",
+        "label": "+ → -",
+        "outcome": "killed",
+        "duration_ms": 931,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 70,
+        "file": "uuid.go",
+        "line": 127,
+        "column": 10,
+        "operator": "ROR",
+        "label": "!= → ==",
+        "outcome": "killed",
+        "duration_ms": 722,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 71,
+        "file": "uuid.go",
+        "line": 127,
+        "column": 26,
+        "operator": "ROR",
+        "label": "!= → ==",
+        "outcome": "killed",
+        "duration_ms": 709,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 72,
+        "file": "uuid.go",
+        "line": 127,
+        "column": 42,
+        "operator": "ROR",
+        "label": "!= → ==",
+        "outcome": "killed",
+        "duration_ms": 769,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 73,
+        "file": "uuid.go",
+        "line": 127,
+        "column": 58,
+        "operator": "ROR",
+        "label": "!= → ==",
+        "outcome": "killed",
+        "duration_ms": 762,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 74,
+        "file": "uuid.go",
+        "line": 173,
+        "column": 10,
+        "operator": "ROR",
+        "label": "!= → ==",
+        "outcome": "killed",
+        "duration_ms": 605,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 75,
+        "file": "uuid.go",
+        "line": 173,
+        "column": 26,
+        "operator": "ROR",
+        "label": "!= → ==",
+        "outcome": "killed",
+        "duration_ms": 706,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 76,
+        "file": "uuid.go",
+        "line": 173,
+        "column": 42,
+        "operator": "ROR",
+        "label": "!= → ==",
+        "outcome": "killed",
+        "duration_ms": 655,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 77,
+        "file": "uuid.go",
+        "line": 173,
+        "column": 58,
+        "operator": "ROR",
+        "label": "!= → ==",
+        "outcome": "killed",
+        "duration_ms": 661,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 78,
+        "file": "uuid.go",
+        "line": 196,
+        "column": 9,
+        "operator": "ROR",
+        "label": "!= → ==",
+        "outcome": "killed",
+        "duration_ms": 944,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 79,
+        "file": "uuid.go",
+        "line": 211,
+        "column": 9,
+        "operator": "ROR",
+        "label": "!= → ==",
+        "outcome": "killed",
+        "duration_ms": 1981,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 80,
+        "file": "uuid.go",
+        "line": 237,
+        "column": 11,
+        "operator": "ROR",
+        "label": "!= → ==",
+        "outcome": "killed",
+        "duration_ms": 1332,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 81,
+        "file": "uuid.go",
+        "line": 237,
+        "column": 33,
+        "operator": "ROR",
+        "label": "!= → ==",
+        "outcome": "killed",
+        "duration_ms": 788,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 82,
+        "file": "uuid.go",
+        "line": 256,
+        "column": 12,
+        "operator": "ROR",
+        "label": "== → !=",
+        "outcome": "killed",
+        "duration_ms": 1363,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 83,
+        "file": "uuid.go",
+        "line": 257,
+        "column": 11,
+        "operator": "ROR",
+        "label": "!= → ==",
+        "outcome": "killed",
+        "duration_ms": 1306,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 84,
+        "file": "uuid.go",
+        "line": 257,
+        "column": 27,
+        "operator": "ROR",
+        "label": "!= → ==",
+        "outcome": "killed",
+        "duration_ms": 1405,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 85,
+        "file": "uuid.go",
+        "line": 257,
+        "column": 43,
+        "operator": "ROR",
+        "label": "!= → ==",
+        "outcome": "killed",
+        "duration_ms": 662,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 86,
+        "file": "uuid.go",
+        "line": 257,
+        "column": 59,
+        "operator": "ROR",
+        "label": "!= → ==",
+        "outcome": "killed",
+        "duration_ms": 1077,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 87,
+        "file": "uuid.go",
+        "line": 302,
+        "column": 24,
+        "operator": "ROR",
+        "label": "== → !=",
+        "outcome": "killed",
+        "duration_ms": 814,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 88,
+        "file": "uuid.go",
+        "line": 304,
+        "column": 24,
+        "operator": "ROR",
+        "label": "== → !=",
+        "outcome": "killed",
+        "duration_ms": 862,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 89,
+        "file": "uuid.go",
+        "line": 306,
+        "column": 24,
+        "operator": "ROR",
+        "label": "== → !=",
+        "outcome": "killed",
+        "duration_ms": 614,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 90,
+        "file": "uuid.go",
+        "line": 348,
+        "column": 7,
+        "operator": "ROR",
+        "label": "== → !=",
+        "outcome": "killed",
+        "duration_ms": 501,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 91,
+        "file": "uuid.go",
+        "line": 161,
+        "column": 17,
+        "operator": "ROR",
+        "label": "< → <=",
+        "outcome": "killed",
+        "duration_ms": 557,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 92,
+        "file": "uuid.go",
+        "line": 244,
+        "column": 17,
+        "operator": "ROR",
+        "label": "< → <=",
+        "outcome": "killed",
+        "duration_ms": 861,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 93,
+        "file": "uuid.go",
+        "line": 319,
+        "column": 7,
+        "operator": "ROR",
+        "label": "> → >=",
+        "outcome": "not_covered",
+        "duration_ms": 2836,
+        "covered": false,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 94,
+        "file": "dce.go",
+        "line": 34,
+        "column": 9,
+        "operator": "ROR",
+        "label": "== → !=",
+        "outcome": "killed",
+        "duration_ms": 653,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 95,
+        "file": "node.go",
+        "line": 41,
+        "column": 11,
+        "operator": "ROR",
+        "label": "!= → ==",
+        "outcome": "survived",
+        "duration_ms": 2618,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 96,
+        "file": "node.go",
+        "line": 41,
+        "column": 25,
+        "operator": "ROR",
+        "label": "!= → ==",
+        "outcome": "survived",
+        "duration_ms": 3288,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 97,
+        "file": "node.go",
+        "line": 50,
+        "column": 10,
+        "operator": "ROR",
+        "label": "== → !=",
+        "outcome": "killed",
+        "duration_ms": 554,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 98,
+        "file": "node.go",
+        "line": 63,
+        "column": 12,
+        "operator": "ROR",
+        "label": "== → !=",
+        "outcome": "killed",
+        "duration_ms": 756,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 99,
+        "file": "node.go",
+        "line": 74,
+        "column": 13,
+        "operator": "ROR",
+        "label": "< → <=",
+        "outcome": "killed",
+        "duration_ms": 509,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 100,
+        "file": "util.go",
+        "line": 14,
+        "column": 43,
+        "operator": "ROR",
+        "label": "!= → ==",
+        "outcome": "killed",
+        "duration_ms": 605,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 101,
+        "file": "util.go",
+        "line": 43,
+        "column": 28,
+        "operator": "ROR",
+        "label": "!= → ==",
+        "outcome": "killed",
+        "duration_ms": 554,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      },
+      {
+        "id": 102,
+        "file": "util.go",
+        "line": 43,
+        "column": 41,
+        "operator": "ROR",
+        "label": "!= → ==",
+        "outcome": "killed",
+        "duration_ms": 604,
+        "covered": true,
+        "tests_run": [
+          "TestJSON,TestJSONUnmarshal,TestNullUUIDScan,TestNullUUIDValue,TestNullUUIDMarshalText,TestNullUUIDUnmarshalText,TestNullUUIDMarshalBinary,TestNullUUIDMarshalJSON,TestNullUUIDUnmarshalJSON,TestClockSeqRace,TestScan,TestValue,TestGetTime,TestUUID,TestFromBytes,TestConstants,TestRandomUUID,TestRandomUUID_Pooled,TestNew,TestClockSeq,TestCoding,TestVersion1,TestNode,TestNodeAndTime,TestMD5,TestSHA1,TestNodeID,TestDCE,TestBadRand,TestSetRand,TestRandomFromReader,TestRandPool,TestWrongLength,TestIsWrongLength,TestValidate,TestVersion6,TestVersion7,TestVersion7_pooled,TestVersion7FromReader,TestVersion7Monotonicity,TestVersion7MonotonicityStrict,TestNewV6WithTime,TestNewV6FromTimeGeneratesUniqueUUIDs,BenchmarkUUID_MarshalJSON,BenchmarkUUID_UnmarshalJSON,BenchmarkParse,BenchmarkParseBytes,BenchmarkParseBytesUnsafe,BenchmarkParseBytesCopy,BenchmarkNew,BenchmarkUUID_String,BenchmarkUUID_URN,BenchmarkParseBadLength,BenchmarkParseLen32Truncated,BenchmarkParseLen36Corrupted,BenchmarkUUID_New,BenchmarkUUID_NewPooled,BenchmarkUUIDs_Strings,BenchmarkNewV6WithTime,FuzzParse,FuzzParseBytes,FuzzFromBytes"
+        ],
+        "cached": false
+      }
+    ],
+    "below_threshold": false,
+    "threshold": 80.0,
+    "routing": {
+      "enabled": true,
+      "backend": "go-cover",
+      "tests_discovered": 62,
+      "mapped": 589
+    },
+    "resources": {
+      "requested_workers": 2,
+      "effective_workers": 2,
+      "global_cpu_budget": 1,
+      "wait_ms": 0,
+      "throttled": false
+    },
+    "timing": {
+      "routing_ms": 1,
+      "execution_ms": 67915,
+      "cache_ms": 0,
+      "total_ms": 67915
+    },
+    "cache_hits": 0
+  }
+}

@@ -73,7 +73,37 @@ baseline-green Go modules and are designed to exercise every idiomatic class at
 medium and large scale. The real-binary verification receipt is in
 [`docs/receipts/m2-verification.md`](docs/receipts/m2-verification.md).
 
+## M3 speed features (GOAL-3, 0.3.0)
+
+- **Per-test coverage routing** (default on): the per-test coverage map is
+  built once via `go test -c -o <bin>.test -cover` + per-test
+  `-test.run=^Name$ -test.coverprofile`, then each mutant runs only its
+  covering tests, short-circuiting on the first kill. `--no-routing` runs the
+  full suite per mutant for comparison. The "routing never kills" invariant
+  (a mutant killed by the full suite is also killed when routed) is asserted
+  in CI.
+- **Adaptive timeouts**: `--timeout 2` selects adaptive mode —
+  `max(3 × baseline + 5s, 5s)` per mutant, replacing the fixed constant.
+- **Content-addressed cache**: keyed on engine + Go toolchain + mutant
+  identity + source/test content + routing mode + selected tests + timeout
+  mode. Warm reruns skip re-running everything (large fixture: 390/390 hits
+  in <1s). `--no-cache` disables it.
+- **Incremental mode**: `--incremental --base-ref <ref>` only re-runs mutants
+  in files changed since the ref; unchanged files must come from the cache.
+- **`--mutant N`**: run a single mutant by discovery index (1-based,
+  zero-padded, or `m`-prefixed), printing its patch and classification.
+- **Parallel scheduler**: Rayon workers, default 75% of effective CPU
+  capacity (affinity/cgroup aware), explicit `--parallel N` honored up to the
+  real CPU count. Output is deterministic regardless of scheduling.
+
+```sh
+./target/debug/gopher_mutant --path ./path/to/module --timeout 2          # routed + adaptive
+./target/debug/gopher_mutant --path ./path/to/module --no-routing         # full suite per mutant
+./target/debug/gopher_mutant --path ./path/to/module --incremental --base-ref HEAD~1
+./target/debug/gopher_mutant --path ./path/to/module --mutant 42 --json   # single mutant + patch
+```
+
 The large fixture is run twice in the receipt to show cold and second-run
-behavior. A sub-30-second warm bound depends on M3's content-addressed cache
-and is intentionally deferred; M2 passes `--timeout 10` to keep deliberate
-infinite-loop mutants bounded.
+behavior. The M3 warm bound (<30s) is met: the large fixture warm rerun is
+~1s with 390/390 cache hits. M2 passes `--timeout 10` to keep deliberate
+infinite-loop mutants bounded; M3 uses `--timeout 2` (adaptive).
